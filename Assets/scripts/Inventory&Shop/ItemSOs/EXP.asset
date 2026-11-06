@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e10c765ba705624e8d1d756942a20b5, type: 3}
+  m_Name: EXP
+  m_EditorClassIdentifier: 
+  itemName: exp
+  itemDesciption: 'This is Exp,It is so cool
+
+'
+  icon: {fileID: 21300000, guid: e7067e35cb29dda49b72a6ed0fbccf66, type: 3}
+  isGold: 0
+  isExp: 1
+  stackSize: 0
+  currentHealth: 0
+  maxHealth: 0
+  speed: 0
+  damage: 0
+  duration: 0

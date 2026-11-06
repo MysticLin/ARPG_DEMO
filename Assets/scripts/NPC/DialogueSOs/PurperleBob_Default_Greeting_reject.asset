@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
+  m_Name: PurperleBob_Default_Greeting_reject
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
+    text: "\u597D\u5427\uFF0C\u7B49\u4F60\u505A\u597D\u4E86\u51C6\u5907\u518D\u6765\u627E\u6211\n"
+  - speaker: {fileID: 11400000, guid: d37cb5d4e9682cc4b9941e3746c3ba23, type: 2}
+    text: "\u597D\u7684\uFF0C\u7B49\u6211\u51C6\u5907\u597D\u7684\n"
+  options: []
+  requiredNPCs: []

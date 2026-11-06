@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe258fff2348c44ca45a0a408a93125, type: 3}
+  m_Name: Quest_LikeThis
+  m_EditorClassIdentifier: 
+  questName: Like this
+  questLevel: 3
+  questDirection: 'It is so beautiful game
+
+'
+  objectives:
+  - description: Collection 3 Mus
+    target: {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
+    requiredAmount: 3
+  - description: Visit the Greet Hills
+    target: {fileID: 11400000, guid: 9b634a9838fae75408d06ff45523d510, type: 2}
+    requiredAmount: 1
+  rewards:
+  - itemSO: {fileID: 11400000, guid: 3abf885019de65f49bd29c4efb371090, type: 2}
+    quantity: 10
+  - itemSO: {fileID: 11400000, guid: a2c34730db6317f4c984674ce00f3d0c, type: 2}
+    quantity: 5
+  - itemSO: {fileID: 11400000, guid: 66b61617921d9e74f895695dfbd8bca9, type: 2}
+    quantity: 1

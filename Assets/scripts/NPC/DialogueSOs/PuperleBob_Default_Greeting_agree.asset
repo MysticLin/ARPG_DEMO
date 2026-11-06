@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
+  m_Name: PuperleBob_Default_Greeting_agree
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
+    text: "\u4F60\u597D\uFF0C\u73A9\u5BB6"
+  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
+    text: "\u770B\u8D77\u6765\u4F60\u7684\u72B6\u6001\u597D\u6781\u4E86\uFF0C\u6709\u6CA1\u6709\u505A\u597D\u6218\u6597\u7684\u51C6\u5907\u5462\uFF1F"
+  - speaker: {fileID: 11400000, guid: d37cb5d4e9682cc4b9941e3746c3ba23, type: 2}
+    text: "\u6211\u8BE5\u5E72\u4EC0\u4E48\u5462\n"
+  options:
+  - optionText: "\u63A5\u53D7"
+    nextDialogue: {fileID: 11400000, guid: b2f6e08b6c77a4a48a8377ecf025072f, type: 2}
+  - optionText: "\u62D2\u7EDD"
+    nextDialogue: {fileID: 11400000, guid: a9b54d4a22943234dabffb6208f495dd, type: 2}
+  requiredNPCs: []

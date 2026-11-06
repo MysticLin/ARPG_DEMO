@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
+  m_Name: PuperleBob_Require_FoundEveryone_Complete
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
+    text: "\u4F60\u627E\u5230\u4E86\u6211\u6240\u6709\u7684\u5144\u5F1F\n"
+  options: []
+  requiredNPCs:
+  - {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
+  - {fileID: 11400000, guid: 5a733ebc25262dc43bb8253b4653b937, type: 2}
+  requiredLocations: []
+  requiredItems: []
+  removeAfterPlay: 1
+  removeTheseOnplay:
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 3175416f2dc212b48910bd99b4bafeb8, type: 2}
+  - {fileID: 11400000, guid: 2617d155c0acea6419d466e3669e5500, type: 2}
