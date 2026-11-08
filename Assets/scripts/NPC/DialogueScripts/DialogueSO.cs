@@ -7,6 +7,13 @@ public class DialogueSO : ScriptableObject
 {
     public DialogueLine[] lines;
     public DialogueOption[] options;
+    [Header("任务 提供（可选择）")]
+    public QuestSO offerQuestOnEnd;
+    [Header("已完成任务要求（可选择）")]
+    public QuestSO[] requiredCompletedQuests;
+    [Header("任务提交（可选择）")]
+    public QuestSO turnInQuestOnEnd;
+
     [Header("对话要求（可选择）")]
     public ActorSO[] requiredNPCs;
     public LocationSO[] requiredLocations;
@@ -41,6 +48,16 @@ public class DialogueSO : ScriptableObject
                     return false;
             }
         }
+        if (requiredCompletedQuests != null && requiredCompletedQuests.Length > 0)
+        {
+            foreach (var quest in requiredCompletedQuests)
+            {
+                if (!QuestManager.Instance.IsQuestComplete(quest))
+                {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 }
@@ -55,4 +72,5 @@ public class DialogueOption
 {
     public string optionText;
     public DialogueSO nextDialogue;
+    public QuestSO offerQuest;
 }

@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
@@ -15,6 +17,7 @@ public class InventoryManager : MonoBehaviour
     public TMP_Text goldText;
     public GameObject lootPrefab;
     public Transform player;
+    public static event Action<int> OnExperienceGained;
     private void Awake()
     {
         if (Instance == null)
@@ -51,6 +54,11 @@ public class InventoryManager : MonoBehaviour
             goldText.text=gold.ToString();
             return;
         }
+        if (itemSO.isExp)
+        {
+            OnExperienceGained?.Invoke(quantity);
+            return;
+        }
         foreach(var slot in itemSlots)
         {
             if (slot.itemSO == itemSO && slot.quantity < itemSO.stackSize)
@@ -79,6 +87,28 @@ public class InventoryManager : MonoBehaviour
         }
         if(quantity > 0)
             DropLoot(itemSO, quantity);
+    }
+    public void RemoveItem(ItemSO itemSO,int quantity)
+    {
+        for(int i = 0; i < itemSlots.Length; i++)
+        {
+            var slot = itemSlots[i];
+            if(slot.itemSO!=itemSO)
+                continue;
+            if (slot.quantity > quantity)
+            {
+                slot.quantity -= quantity;
+                slot.UpdateUI();
+                quantity = 0;
+            }
+            else
+            {
+                quantity -= slot.quantity;
+                slot.itemSO = null;
+                slot.quantity = 0;
+                slot.UpdateUI();
+            }
+        }
     }
     public void DropItem(InventorySlot slot)
     {

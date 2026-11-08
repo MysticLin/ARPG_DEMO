@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
+  m_Name: PurpleBob_QuestOffer
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
+    text: 'You seem like a nice guy
+
+      How about you like this on?
+
+'
+  options: []
+  offerQuestOnEnd: {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 0}
+  requiredNPCs: []
+  requiredLocations:
+  - {fileID: 11400000, guid: 9b634a9838fae75408d06ff45523d510, type: 2}
+  requiredItems: []
+  removeAfterPlay: 0
+  removeTheseOnplay: []

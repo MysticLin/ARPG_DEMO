@@ -24,14 +24,17 @@ public class QuestLogUI : MonoBehaviour
     private void OnEnable()
     {
         QuestEvents.OnQuestOfferRequested += ShowQuestOffer;
+        QuestEvents.OnQuestTurnInRequested += ShowQuestTurnIn;
     }
     private void OnDisable()
     {
         QuestEvents.OnQuestOfferRequested -= ShowQuestOffer;
+        QuestEvents.OnQuestTurnInRequested -= ShowQuestTurnIn;
     }
+    #region 展示任务的方法
     public void ShowQuestOffer(QuestSO incomingQuestSO)
     {
-        if (questManager.IsQuestAccepted(incomingQuestSO))
+        if (questManager.IsQuestAccepted(incomingQuestSO)||questManager.GetCompleteQuest(incomingQuestSO))
         {
             questSO = noAvailableQuestSO;
             SetCanvasState(acceptCanvasGroup, false);
@@ -48,11 +51,25 @@ public class QuestLogUI : MonoBehaviour
         HandleQuestClicked(questSO);
         SetCanvasState(questCanvas, true);
     }
+
+    public void ShowQuestTurnIn(QuestSO incomingQuestSO)
+    {
+        questSO=incomingQuestSO;
+        HandleQuestClicked(questSO);
+        SetCanvasState(completeCanvasGroup,true);
+        SetCanvasState(acceptCanvasGroup,false);
+        SetCanvasState (declineCanvasGroup,false);
+        SetCanvasState(questCanvas,true);
+    }
+    #endregion
+    #region 存放按钮点击的方法
     public void OnAcceptQuestClicked()
     {
+        QuestEvents.OnQuestAccepted?.Invoke(questSO);
         questManager.AcceptQuest(questSO);
         SetCanvasState(completeCanvasGroup, false);
         SetCanvasState(acceptCanvasGroup, false);
+        SetCanvasState(declineCanvasGroup,false);
         RefreshQuestList();
         HandleQuestClicked(noAvailableQuestSO);
     }
@@ -62,9 +79,12 @@ public class QuestLogUI : MonoBehaviour
     }
     public void OnCompleteQuestClicked()
     {
+        questManager.CompleteQuest(questSO);
         RefreshQuestList();
+        HandleQuestClicked(noAvailableQuestSO);
+        SetCanvasState(completeCanvasGroup, false);
     }
-
+    #endregion
     private void SetCanvasState(CanvasGroup group,bool activate)
     {
         group.alpha = activate ? 1 : 0;
