@@ -1,9 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Xml.Serialization;
-using TMPro;
-using TMPro.Examples;
 using UnityEngine;
 
 public class Enemy_Move : MonoBehaviour

@@ -1,10 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class NPC_Patro : MonoBehaviour
 {

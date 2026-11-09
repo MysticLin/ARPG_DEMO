@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
 [CreateAssetMenu(fileName ="DialogueSO",menuName ="Dialogue/DialogueNode")]
 public class DialogueSO : ScriptableObject

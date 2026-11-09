@@ -1,10 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class NPC_Talk : MonoBehaviour
 {

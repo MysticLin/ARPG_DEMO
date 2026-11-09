@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 [CreateAssetMenu(fileName = "QuestSO", menuName = "QuestSO")]
 public class QuestSO : ScriptableObject

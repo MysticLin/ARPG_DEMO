@@ -1,8 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml.Schema;
-using UnityEditor;
 using UnityEngine;
 
 public class NPC_Wander : MonoBehaviour
