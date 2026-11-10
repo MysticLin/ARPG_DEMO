@@ -76,6 +76,12 @@ public class Enemy_Move : MonoBehaviour
             ChangeState(EnemyState.Idle);
         }
     }
+    public void ResetStare()
+    {
+        enemyState = EnemyState.Idle;
+        if(rb!=null)rb.velocity = Vector2.zero;
+        StopAllCoroutines();
+    }
     public void ChangeState(EnemyState newstate)
     {
         //退出当前状态

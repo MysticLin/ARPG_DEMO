@@ -44,7 +44,7 @@ public class InventorySlot : MonoBehaviour,IPointerClickHandler
                 }
                 else
                 {
-                    if (itemSO.currentHealth > 0 && StatsManager.Instance.currentHealth >= StatsManager.Instance.maxHealth)
+                    if (itemSO.currentHealth > 0 && StatsManager.Instance.CurrentHealth >= StatsManager.Instance.MaxHealth)
                         return;
                     inventoryManager.UseItem(this);
                 }

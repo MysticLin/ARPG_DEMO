@@ -1,33 +1,54 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Enemy_Health : MonoBehaviour
 {
     public int expReward = 3;
-    public delegate void MonsterDefeated(int exp);
-    public static event MonsterDefeated OnMonsterDefeated;
-    public int currentHealth;
-    public int maxHealth;
-    public Animator anim;
-
-    private void Start()
+    public static Action<int> OnMonsterDefeated;
+    [FormerlySerializedAs("maxHealth")]
+    [SerializeField] private int StartMaxHealth = 3;
+    [SerializeField] private float DestoryTime = 1.5f;
+    [SerializeField] private Animator anim;
+    [SerializeField] private Enemy_Combat combat;
+    [SerializeField] private Enemy_Move move;
+    [SerializeField] private Collider2D col;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Enemy_Knockback knock;
+    public Health health { get; private set; }
+    public bool isDead=>health != null&&health.IsDead;
+    private void Awake()
     {
-        currentHealth = maxHealth;
+        health = new Health(StartMaxHealth);
+        health.OnDied += HandleDead;
     }
-    public void ChangeHealth(int amount)
+    private void OnDestroy()
     {
-        currentHealth += amount;
+        if(health!=null)health.OnDied -= HandleDead;
+    }
+    public bool ChangeHealth(int amount)
+    {
+        if(health==null||isDead)return false;
         if (amount < 0)
         {
-            anim.SetTrigger("isHurt");
+            if(anim!=null)anim.SetTrigger("isHurt");
+            health.TakeDamage(-amount);
         }
-        if (currentHealth > maxHealth)
+        else if(amount>0)health.Heal(amount);
+       return !health.IsDead;
+    }
+    public void HandleDead()
+    {
+        if(rb!=null)rb.velocity=Vector2.zero;
+        if(combat!=null)combat.enabled = false;
+        if(move!=null)move.enabled = false;
+        if (knock != null)
         {
-            currentHealth = maxHealth;
+            knock.Cancel();
+            knock.enabled = false;
         }
-        else if (currentHealth <= 0)
-        {
-            OnMonsterDefeated(expReward);
-            Destroy(gameObject);
-        }
+        if(col!=null)col.enabled = false;
+        OnMonsterDefeated?.Invoke(expReward);
+        Destroy(gameObject, DestoryTime);
     }
 }

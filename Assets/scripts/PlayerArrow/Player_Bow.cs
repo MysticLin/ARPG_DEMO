@@ -55,4 +55,10 @@ public class Player_Bow : MonoBehaviour
             anim.SetFloat("aimY",aimDirection.y);
         }
     }
+    public void ResetState()
+    {
+        shootTimer=0;
+        if(playerMove!=null)playerMove.isShooting=false;
+        if (anim != null) anim.SetBool("isShooting", false);
+    }
 }

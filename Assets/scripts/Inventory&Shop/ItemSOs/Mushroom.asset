@@ -16,8 +16,10 @@ MonoBehaviour:
   itemDesciption: It's an item...itMushroom?
   icon: {fileID: -1040560102, guid: 46991eab9b9effb42a077f4c2098b183, type: 3}
   isGold: 0
+  isExp: 0
+  stackSize: 3
   currentHealth: 5
   maxHealth: 10
   speed: 0
   damage: 0
-  duration: 0
+  duration: 2

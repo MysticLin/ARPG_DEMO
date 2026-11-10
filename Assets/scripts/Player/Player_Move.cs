@@ -48,6 +48,13 @@ public class Player_Move : MonoBehaviour
         rb.velocity = direction*force;
         StartCoroutine(KnockbackCounter(stunTime));
     }
+    public void ResetState()
+    {
+        isShooting = false;
+        isKnockedBack=false;
+        if(rb!=null)rb.velocity = Vector2.zero;
+        StopAllCoroutines();
+    }
     IEnumerator KnockbackCounter(float stunTime)
     {
         yield return new WaitForSeconds(stunTime);
