@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class Arrow : MonoBehaviour
@@ -15,7 +16,7 @@ public class Arrow : MonoBehaviour
     public float knockbackForce;
     public float knockbackTime;
     public float stunTime;
-
+    private bool hasHit;
     void Start()
     {
         rb.velocity = direction*speed;
@@ -29,14 +30,21 @@ public class Arrow : MonoBehaviour
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {
+        if(hasHit)return;
         if ((enemyLayer.value & (1 << collision.gameObject.layer)) > 0)
         {
-            collision.gameObject.GetComponent<Enemy_Health>().ChangeHealth(-damage);
-            collision.gameObject.GetComponent<Enemy_Knockback>().Knockback(transform,knockbackForce,stunTime,knockbackTime);
+            hasHit = true;
+            Enemy_Health enemy_Health = collision.gameObject.GetComponent<Enemy_Health>();
+            if (enemy_Health != null && enemy_Health.ChangeHealth(-damage))
+            {
+               Enemy_Knockback enemy_KnockBack=collision.gameObject.GetComponent<Enemy_Knockback>();
+                if (enemy_KnockBack != null) enemy_KnockBack.Knockback(transform, knockbackForce, stunTime, knockbackTime);
+            }
             AttachToTarget(collision.gameObject.transform);
         }
         else if((obstacleLayer.value & (1 << collision.gameObject.layer)) > 0)
         {
+            hasHit=true;
             AttachToTarget(collision.gameObject.transform);
         }
     }

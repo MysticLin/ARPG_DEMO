@@ -78,8 +78,8 @@ public class StatsManager : MonoBehaviour
     }
     public void UpdateSpeed(int amount)
     {
-        if(statsUI==null)return;
         speed += amount;
+        if (statsUI!=null)return;
         statsUI.UpdateAllStats();
     }
 }

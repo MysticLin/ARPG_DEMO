@@ -119,16 +119,11 @@ public class InventoryManager : MonoBehaviour
 
     public void UseItem(InventorySlot slot)
     {
-        if (slot.itemSO != null && slot.quantity >= 0)
-        {
-            if(useItem.ApplyItemEffects(slot.itemSO))
-            slot.quantity--;
-            if (slot.quantity <= 0)
-            {
-                slot.itemSO =null;
-            }
-            slot.UpdateUI();
-        }
+        if (slot == null || slot.itemSO == null || slot.quantity <= 0) return;
+        if (!useItem.ApplyItemEffects(slot.itemSO)) return;
+        slot.quantity--;
+        if(slot.quantity<=0)slot.itemSO = null;
+        slot.UpdateUI();
     }
     public bool HasItem(ItemSO itemSO)
     {

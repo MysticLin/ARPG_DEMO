@@ -7,6 +7,7 @@ public class Player_Health : MonoBehaviour
     public Health health;
     public float InvincibleTime=1;
     private float InvincibleTimeUntil;
+    [SerializeField] private CanvasGroup DeadCanvas;
     [SerializeField] private Player_Move move;
     [SerializeField] private Player_Combat combat;
     [SerializeField] private Player_Bow bow;
@@ -46,6 +47,12 @@ public class Player_Health : MonoBehaviour
         ResetSet();
         SetControl(false);
         if(rb!=null)rb.velocity = Vector2.zero;
+        if (DeadCanvas != null)
+        {
+            DeadCanvas.alpha = 1;
+            DeadCanvas.blocksRaycasts = true;
+            DeadCanvas.interactable = true;
+        }
     }
     public void PlayRevive()
     {
@@ -59,12 +66,16 @@ public class Player_Health : MonoBehaviour
     private void SetControl(bool isEnable)
     {
         if(move!=null) move.enabled = isEnable;
-        if(bow!=null) bow.enabled = isEnable;
         if(col!=null) col.enabled = isEnable;
-        if(combat!=null) combat.enabled = isEnable;
     }
-    private void ResetSet()
+    public void ResetSet()
     {
+        if (DeadCanvas != null)
+        {
+            DeadCanvas.alpha = 0;
+            DeadCanvas.blocksRaycasts = false;
+            DeadCanvas.interactable =false;
+        }
         if (move != null) move.ResetState();
         if (combat != null) combat.ResetState();
         if (bow != null) bow.ResetState();

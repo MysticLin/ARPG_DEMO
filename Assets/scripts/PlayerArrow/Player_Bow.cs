@@ -14,7 +14,8 @@ public class Player_Bow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        shootTimer-=Time.deltaTime;
+        if (StatsManager.Instance==null||StatsManager.Instance.isDead) return;
+        shootTimer -=Time.deltaTime;
 
         HandleAiming();
         if (Input.GetButtonDown("Shoot") && shootTimer <= 0)
@@ -35,6 +36,7 @@ public class Player_Bow : MonoBehaviour
     }
     public void Shoot()
     {
+        if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (shootTimer <= 0)
         {
             Arrow arrow = Instantiate(arrowPrefab, launchPoint.position, Quaternion.identity).GetComponent<Arrow>();
