@@ -1,6 +1,5 @@
 
 using System;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
 
 public readonly struct InventorySlotView
 {
@@ -51,7 +50,7 @@ public class Inventory
             s.Quantity += add;
             remaining -= add;
         }
-        for(int i = 0; i < slots.Length; i++)
+        for(int i = 0; i < slots.Length&&remaining>0; i++)
         {
             Slot s= slots[i];
             if (s.itemSO != null && s.Quantity > 0) continue;

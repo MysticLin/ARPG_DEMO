@@ -5,12 +5,11 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour,IPointerClickHandler
 {
-    public ItemSO itemSO;
-    public int quantity;
-
+    private ItemSO itemSO { get; set; }
+    private int quantity { get; set; }
+    private int index{ get; set; }
     public Image itemImage;
     public TMP_Text quantityText;
-
     private InventoryManager inventoryManager;
     private static ShopManager activeShop;
     private void Start()
@@ -29,46 +28,55 @@ public class InventorySlot : MonoBehaviour,IPointerClickHandler
     {
         activeShop=isOpen?shopManager:null;
     }
-
+    public void Bind(int index)
+    {
+        this.index = index;
+    }
+    public void Set(ItemSO itemSO,int quantity)
+    {
+       this.itemSO = itemSO;
+        this.quantity = quantity;
+        UpdateUI();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (quantity > 0)
+        if (quantity <= 0 || inventoryManager == null) return;
+        if (activeShop != null)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (activeShop != null)
-                {
-                    activeShop.SellItem(itemSO);
-                    quantity--;
-                    UpdateUI();
-                }
-                else
-                {
-                    inventoryManager.UseItem(this);
-                }
-            }
-            else if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                inventoryManager.DropItem(this);
+                    activeShop.SellItem(index);
+                return;
             }
         }
-      
+        if(eventData.button==PointerEventData.InputButton.Left)
+            inventoryManager.UseItem(index);
+        else if(eventData.button==PointerEventData.InputButton.Right)
+            inventoryManager.DropItem(index);
     }
-
     public void UpdateUI()
     {
         if (quantity <= 0)
-            itemSO = null;
-        if (itemSO != null)
         {
-            itemImage.sprite = itemSO.icon;
-            itemImage.gameObject.SetActive(true);
-            quantityText.text=quantity.ToString();
+            itemSO = null;
+            quantity = 0;
+        }
+        if(itemSO != null)
+        {
+            if (itemImage!=null)
+            {
+                itemImage.sprite = itemSO.icon;
+                itemImage.gameObject.SetActive(true);
+            }
+            if (quantityText != null)
+                quantityText.text = quantity.ToString();
         }
         else
         {
-            itemImage.gameObject.SetActive(false);
-            quantityText.text = "";
+            if (itemImage != null)
+                itemImage.gameObject.SetActive(false);
+            if (quantityText != null)
+                quantityText.text = "";
         }
     }
 }

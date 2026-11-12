@@ -12,24 +12,39 @@ public class InventoryManager : MonoBehaviour
     public GameObject lootPrefab;
     public Transform player;
     public static event Action<int> OnExperienceGained;
+    private Inventory inventory;
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        int slotCount = itemSlots != null ? itemSlots.Length : 0;
+        inventory = new Inventory(slotCount);
+        inventory.Changed += RefreshSlots;
+        if (itemSlots != null)
+        {
+            for(int i = 0; i < itemSlots.Length; i++)
+            {
+                if (itemSlots[i] != null)
+                    itemSlots[i].Bind(i);
+            }
         }
     }
     private void Start()
     {
-        foreach(var slot in itemSlots)
-        {
-            slot.UpdateUI();
-        }
+       RefreshSlots();
+        UpdateGoldText();
+    }
+    private void OnDestroy()
+    {
+        if(inventory!=null)
+            inventory.Changed -= RefreshSlots;
+        if(Instance==this)
+            Instance = null;
     }
 
     private void OnEnable()
@@ -40,12 +55,20 @@ public class InventoryManager : MonoBehaviour
     {
         Loot.OnItemLooted -= AddItem;
     }
+    public InventorySlotView GetSlot(int index)
+    {
+        return inventory != null ? inventory.GetSlot(index) : default;
+    }
+    public bool canAdd(ItemSO itemSO,int quantity = 1)
+    {
+        return inventory != null && inventory.CanAdd(itemSO, quantity);
+    }
     public void AddItem(ItemSO itemSO,int quantity)
     {
+        if (itemSO == null || quantity <= 0 || inventory == null) return;
         if (itemSO.isGold)
         {
-            gold += quantity;
-            goldText.text=gold.ToString();
+            AddGold(quantity);
             return;
         }
         if (itemSO.isExp)
@@ -53,96 +76,81 @@ public class InventoryManager : MonoBehaviour
             OnExperienceGained?.Invoke(quantity);
             return;
         }
-        foreach(var slot in itemSlots)
-        {
-            if (slot.itemSO == itemSO && slot.quantity < itemSO.stackSize)
-            {
-                int availableSpace=itemSO.stackSize-slot.quantity;
-                int amountToAdd = Mathf.Min(availableSpace, quantity);
-                slot.quantity += amountToAdd;
-                quantity-= amountToAdd;
-                slot.UpdateUI();
-                if (quantity <= 0)
-                    return;
-            }
-        }
-
-        foreach (var slot in itemSlots)
-        {
-            if (slot.itemSO == null)
-            {
-                int amountToAdd = Mathf.Min(itemSO.stackSize, quantity);
-                slot.itemSO = itemSO;
-                slot.quantity = amountToAdd;
-                quantity -= amountToAdd;
-                slot.UpdateUI();
-                return;
-            }
-        }
-        if(quantity > 0)
-            DropLoot(itemSO, quantity);
+        int left = inventory.Add(itemSO, quantity);
+            if (left > 0)
+            DropLoot(itemSO, left);
+      
     }
     public void RemoveItem(ItemSO itemSO,int quantity)
     {
-        for(int i = 0; i < itemSlots.Length; i++)
-        {
-            var slot = itemSlots[i];
-            if(slot.itemSO!=itemSO)
-                continue;
-            if (slot.quantity > quantity)
-            {
-                slot.quantity -= quantity;
-                slot.UpdateUI();
-                quantity = 0;
-            }
-            else
-            {
-                quantity -= slot.quantity;
-                slot.itemSO = null;
-                slot.quantity = 0;
-                slot.UpdateUI();
-            }
-        }
+        if (inventory == null || itemSO == null || quantity <= 0) return;
+        inventory.Remove(itemSO, quantity);
     }
-    public void DropItem(InventorySlot slot)
+    public int RemoveAt(int index,int quantity)
     {
-        DropLoot(slot.itemSO, 1);
-        slot.quantity--;
-        if (slot.quantity <= 0) slot.itemSO = null;
-        slot.UpdateUI();
+        return inventory != null ? inventory.RemoveAt(index, quantity) : 0;
     }
-    private void DropLoot(ItemSO itemSO, int quantity)
+    public void UseItem(int index)
     {
-        Loot loot=Instantiate(lootPrefab, player.position, Quaternion.identity).GetComponent<Loot>();
-        loot.Initialize(itemSO,quantity);
-    }
-
-    public void UseItem(InventorySlot slot)
-    {
-        if (slot == null || slot.itemSO == null || slot.quantity <= 0) return;
+        if (inventory == null || useItem == null) return;
+        InventorySlotView slot = inventory.GetSlot(index);
+        if (slot.IsEmpty) return;
         if (!useItem.ApplyItemEffects(slot.itemSO)) return;
-        slot.quantity--;
-        if(slot.quantity<=0)slot.itemSO = null;
-        slot.UpdateUI();
+        inventory.RemoveAt(index, 1);
+    }
+    public void DropItem(int index)
+    {
+        if (ShopKeeper.currentShopkeeper != null) return;
+        if (inventory == null) return;
+        InventorySlotView slot = inventory.GetSlot(index);
+        if (slot.IsEmpty) return;
+        if (inventory.RemoveAt(index, 1) == 0) return;
+        DropLoot(slot.itemSO, 1);
     }
     public bool HasItem(ItemSO itemSO)
     {
-       foreach(var slot in itemSlots)
-        {
-            if (slot.itemSO == itemSO && slot.quantity > 0)
-                return true;
-        }
-       return false;
+        return inventory != null && inventory.Has(itemSO);
     }
     public int GetItemQuantity(ItemSO itemSO)
     {
-        int total = 0;
-        foreach(var slot in itemSlots)
-        {
-            if (slot.itemSO == itemSO)
-                total += slot.quantity;
-        }
-        return total;
+        return inventory != null ? inventory.Count(itemSO) : 0;
     }
-    
+    public void AddGold(int amount)
+    {
+        if (amount <= 0) return;
+        gold += amount;
+        UpdateGoldText();
+    }
+    public  bool TrySpendGold(int amount)
+    {
+        if (amount < 0 || gold < amount) return false;
+        gold -= amount;
+        UpdateGoldText();
+        return true;
+    }
+    public void UpdateGoldText()
+    {
+        if (goldText != null)
+            goldText.text = gold.ToString();
+    }
+    public void RefreshSlots()
+    {
+        if (inventory == null || itemSlots == null) return;
+        for(int i = 0; i < itemSlots.Length; i++)
+        {
+            if (itemSlots[i]==null)continue;
+            InventorySlotView slot=inventory.GetSlot(i);
+            itemSlots[i].Set(slot.itemSO, slot.Quantity);
+        }
+    }
+   
+    private void DropLoot(ItemSO itemSO, int quantity)
+    {
+        if (itemSO == null || quantity <= 0) return;
+        if (lootPrefab == null || player == null) return;
+        Loot loot = Instantiate(lootPrefab, player.position, Quaternion.identity).GetComponent<Loot>();
+        if(loot!=null)
+        loot.Initialize(itemSO, quantity);
+    }
+
 }
