@@ -149,7 +149,7 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!70 &5042550927257650873
@@ -237,8 +237,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e398a5fff01ca844ba6f8e5f2cdd6941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthText: {fileID: 0}
   HealthAnim: {fileID: 0}
+  InvincibleTime: 1
+  DeadCanvas: {fileID: 0}
+  move: {fileID: 0}
+  combat: {fileID: 0}
+  bow: {fileID: 0}
+  col: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!114 &275775630849408242
 MonoBehaviour:
   m_ObjectHideFlags: 0

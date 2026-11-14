@@ -103,6 +103,7 @@ public class Enemy_Move : MonoBehaviour
     }
     private void OnDrawGizmosSelected()
     {
+        if (detectionPoint == null) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(detectionPoint.position, playerDetectRange);
     }

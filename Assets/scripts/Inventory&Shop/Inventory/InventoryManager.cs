@@ -46,15 +46,6 @@ public class InventoryManager : MonoBehaviour
         if(Instance==this)
             Instance = null;
     }
-
-    private void OnEnable()
-    {
-        Loot.OnItemLooted += AddItem;
-    }
-    private void OnDisable()
-    {
-        Loot.OnItemLooted -= AddItem;
-    }
     public InventorySlotView GetSlot(int index)
     {
         return inventory != null ? inventory.GetSlot(index) : default;
@@ -127,6 +118,10 @@ public class InventoryManager : MonoBehaviour
         gold -= amount;
         UpdateGoldText();
         return true;
+    }
+    public int TryAddItem(ItemSO item,int quantity)
+    {
+        return inventory!=null?inventory.Add(item,quantity):quantity;
     }
     public void UpdateGoldText()
     {
