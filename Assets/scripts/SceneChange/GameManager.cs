@@ -10,34 +10,11 @@ public class GameManager : MonoBehaviour
     public GameObject[] persistentObjects;
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
-            CleanUpAndDestory();
+            Destroy(gameObject);
             return;
         }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            MarkPersistentObjects();
-        }
-    }
-    private void MarkPersistentObjects()
-    {
-        foreach(GameObject obj in persistentObjects)
-        {
-            if (obj != null)
-            {
-                DontDestroyOnLoad (obj);
-            }
-        }
-    }
-    private void CleanUpAndDestory()
-    {
-        foreach(GameObject obj in persistentObjects)
-        {
-            Destroy(obj);
-        }
-        Destroy(gameObject);
+        Instance = this;
     }
 }

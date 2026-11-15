@@ -52,6 +52,4 @@ public class Loot : MonoBehaviour
         anim.Play("LootPickUp");
         Destroy(gameObject,0.5f);
     }
-
-
 }

@@ -1,12 +1,30 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-
+    public static ShopManager Instance {  get; private set; }
     [SerializeField] private ShopSlot[] shopSlots;
     [SerializeField] private InventoryManager inventoryManager;
-  
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
+    private void Start()
+    {
+        if(inventoryManager==null)
+            inventoryManager=InventoryManager.Instance;
+    }
+    private void OnDestroy()
+    {
+        if(Instance==this)Instance=null;
+    }
     public void PopulateShopItems(List<ShopItems> shopItems)
     {
         if (shopSlots == null || shopItems == null) return;

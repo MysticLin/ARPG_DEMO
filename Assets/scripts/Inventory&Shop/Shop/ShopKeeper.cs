@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class ShopKeeper : MonoBehaviour
@@ -17,10 +18,25 @@ public class ShopKeeper : MonoBehaviour
 
     private bool playerInRange;
     private bool isShopOpen;
-
+    private void Start()
+    {
+        if (shopManager == null)
+            shopManager = ShopManager.Instance;
+        if (shopManager == null)
+            return;
+        if (ShopCanvasGroup == null)
+        {
+            ShopCanvasGroup = shopManager.GetComponentInParent<CanvasGroup>();
+            if (ShopCanvasGroup == null)
+                ShopCanvasGroup = shopManager.GetComponentInChildren<CanvasGroup>(true);
+        }
+        if (shopkeeperCam == null)
+            shopkeeperCam = shopManager.GetComponentInChildren<Camera>(true);
+    }
 
     void Update()
     {
+        if (shopManager == null || ShopCanvasGroup == null) return;
         if (playerInRange)
         {
             if (Input.GetButtonDown("Interact"))
@@ -34,9 +50,11 @@ public class ShopKeeper : MonoBehaviour
                     OnShopStateChanged?.Invoke(shopManager, true);
                     ShopCanvasGroup.blocksRaycasts = true;
                     ShopCanvasGroup.interactable = true;
-
-                    shopkeeperCam.transform.position = transform.position + cameraOffset;
-                    shopkeeperCam.gameObject.SetActive(true);
+                    if (shopkeeperCam != null)
+                    {
+                        shopkeeperCam.transform.position = transform.position + cameraOffset;
+                        shopkeeperCam.gameObject.SetActive(true);
+                    }
                     OpenItemShop();
                 }
                 else
@@ -47,6 +65,7 @@ public class ShopKeeper : MonoBehaviour
                     ShopCanvasGroup.alpha = 0;
                     OnShopStateChanged?.Invoke(shopManager,false);
                     ShopCanvasGroup.blocksRaycasts = false;
+                    if(shopkeeperCam!=null)
                     shopkeeperCam.gameObject.SetActive(false);
                     ShopCanvasGroup.interactable = false;
                 }

@@ -21,7 +21,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
         int slotCount = itemSlots != null ? itemSlots.Length : 0;
         inventory = new Inventory(slotCount);
         inventory.Changed += RefreshSlots;
@@ -121,6 +120,17 @@ public class InventoryManager : MonoBehaviour
     }
     public int TryAddItem(ItemSO item,int quantity)
     {
+        if (item == null || quantity <= 0) return 0;
+        if (item.isGold)
+        {
+            AddGold(quantity);
+            return 0;
+        }
+        if (item.isExp)
+        {
+            OnExperienceGained?.Invoke(quantity);
+            return 0;
+        }
         return inventory!=null?inventory.Add(item,quantity):quantity;
     }
     public void UpdateGoldText()

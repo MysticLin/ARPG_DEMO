@@ -22,38 +22,44 @@ public class DialogueSO : ScriptableObject
 
     public bool IsConditionMet()
     {
-        if (requiredNPCs.Length > 0)
+        if (GameManager.Instance == null) return false;
+        if (requiredNPCs.Length > 0||requiredNPCs!=null)
         {
+            if(GameManager.Instance.DialogueHistoryTracker==null)return false;
             foreach(var npc in requiredNPCs)
             {
+                if (npc == null) continue;
                 if(!GameManager.Instance.DialogueHistoryTracker.HasSpokenWith(npc))
                     return false;
             }
         }
-        if (requiredLocations.Length > 0)
+        if (requiredLocations.Length > 0||requiredLocations!=null)
         {
+            if (GameManager.Instance.LocatioHistroyTracker == null) return false;
             foreach (var location in requiredLocations)
             {
+                if (location == null) continue;
                 if(!GameManager.Instance.LocatioHistroyTracker.HasVisited(location))
                     return false;
             }
         }
-        if (requiredItems.Length > 0)
+        if (requiredItems.Length > 0&&requiredItems!=null)
         {
+            if (InventoryManager.Instance == null) return false;
             foreach(var item in requiredItems)
             {
+                if (item == null) continue;
                 if(!InventoryManager.Instance.HasItem(item))
                     return false;
             }
         }
         if (requiredCompletedQuests != null && requiredCompletedQuests.Length > 0)
         {
+            if (QuestManager.Instance == null) return false;
             foreach (var quest in requiredCompletedQuests)
             {
                 if (!QuestManager.Instance.IsQuestComplete(quest))
-                {
                     return false;
-                }
             }
         }
         return true;
