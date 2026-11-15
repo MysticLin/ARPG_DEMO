@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class Player_Bow : MonoBehaviour
@@ -9,19 +10,28 @@ public class Player_Bow : MonoBehaviour
     public float shootCooldown = 0.5f;
     public float shootTimer;
     public Animator anim;
-
-
-    // Update is called once per frame
+    private Vector2 shotDirection = Vector2.right;
+    [SerializeField] private float maxShootTime = 2f;
     void Update()
     {
         if (StatsManager.Instance==null||StatsManager.Instance.isDead) return;
         shootTimer -=Time.deltaTime;
-
+        if(playerMove.state==PlayerState.KnockBack)
+        {
+            CancelInvoke(nameof(EndShooting));
+            if (anim != null) anim.SetBool("isShooting", false);
+            return;
+        }
+        if (playerMove.state == PlayerState.Shooting) return;
         HandleAiming();
         if (Input.GetButtonDown("Shoot") && shootTimer <= 0)
         {
-            playerMove.isShooting = true;
-            anim.SetBool("isShooting", true);
+          shotDirection=aimDirection;
+            playerMove.SetFacing(shotDirection.x);
+            playerMove.SetShooting(true);
+            if(anim!=null)anim.SetBool("isShooting",true);
+            CancelInvoke(nameof(EndShooting));
+            Invoke(nameof(EndShooting), maxShootTime);
         }
     }
     private void OnEnable()
@@ -37,14 +47,21 @@ public class Player_Bow : MonoBehaviour
     public void Shoot()
     {
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
+        if (playerMove == null || playerMove.state != PlayerState.Shooting) return;
         if (shootTimer <= 0)
         {
             Arrow arrow = Instantiate(arrowPrefab, launchPoint.position, Quaternion.identity).GetComponent<Arrow>();
-            arrow.direction = aimDirection;
+            arrow.direction = shotDirection;
             shootTimer = shootCooldown;
         }
-        anim.SetBool("isShooting", false);
-        playerMove.isShooting = false;
+    }
+    public void EndShooting()
+    {
+        CancelInvoke(nameof(EndShooting));
+        if(anim!=null)
+            anim.SetBool("isShooting",false);
+        if(playerMove!=null)
+            playerMove.SetShooting(false);
     }
     public void HandleAiming()
     {
@@ -60,7 +77,8 @@ public class Player_Bow : MonoBehaviour
     public void ResetState()
     {
         shootTimer=0;
-        if(playerMove!=null)playerMove.isShooting=false;
+        CancelInvoke(nameof(EndShooting));
+        if (playerMove != null) playerMove.SetShooting(false);
         if (anim != null) anim.SetBool("isShooting", false);
     }
 }

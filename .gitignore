@@ -30,5 +30,4 @@ Thumbs.db
 # logs
 sysinfo.txt
 crashlytics-build.properties
-Builds2/
-Builds3/
+/[Bb]uilds*/
