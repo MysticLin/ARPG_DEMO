@@ -16,6 +16,7 @@ public class Player_Combat : MonoBehaviour
     }
     public void Attack()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (timer<=0)
         {
@@ -26,6 +27,7 @@ public class Player_Combat : MonoBehaviour
     }
     public void DealDamage()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (StatsManager.Instance==null)return;
         Collider2D[] enemies = Physics2D.OverlapCircleAll(attackPoint.position, StatsManager.Instance.weaponRange, enemyLayer);

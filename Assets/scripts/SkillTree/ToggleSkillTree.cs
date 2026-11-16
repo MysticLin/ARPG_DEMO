@@ -6,6 +6,7 @@ public class ToggleSkillTree : MonoBehaviour
     private bool skillTreeOpen = false;
     private void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (Input.GetButtonDown("ToggleSkillTree"))
         {
             if (skillTreeOpen)

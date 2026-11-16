@@ -10,6 +10,7 @@ public class Player_Move : MonoBehaviour
     public Player_Combat player_Combat;
     private void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (state != PlayerState.Normal) return;
         if (Input.GetButtonDown("Slash")&&player_Combat!=null&&player_Combat.enabled)
         {
@@ -18,6 +19,11 @@ public class Player_Move : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (DialogueManager.IsDialogueActive)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
         if (state == PlayerState.Shooting)
         {
             rb.velocity = Vector2.zero;

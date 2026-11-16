@@ -14,6 +14,7 @@ public class Player_Bow : MonoBehaviour
     [SerializeField] private float maxShootTime = 2f;
     void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance==null||StatsManager.Instance.isDead) return;
         shootTimer -=Time.deltaTime;
         if(playerMove.state==PlayerState.KnockBack)

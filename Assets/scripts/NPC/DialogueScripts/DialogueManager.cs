@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +15,9 @@ public class DialogueManager : MonoBehaviour
     public Button[] choiceButtons;
 
     public bool isDialogueActive;
-
+    private bool waitingForEnd;
+    private float endReadyTime;
+    public static bool IsDialogueActive { get;private set; }
     private  DialogueSO currentDialogue;
     private int dialogueIndex;
     private float lastDialogueEndTime;
@@ -27,19 +30,30 @@ public class DialogueManager : MonoBehaviour
         foreach (var button in choiceButtons)
         button.gameObject.SetActive(false);
     }
+    private void Update()
+    {
+        if (!isDialogueActive || !waitingForEnd) return;
+        if (Time.unscaledTime < endReadyTime) return;
+        if(Input.anyKeyDown)
+            EndDialogue();
+    }
     public bool CanStartDialogue()
     {
         return Time.unscaledTime - lastDialogueEndTime > dialogueCooldown;
     }
     public void StartDialogue(DialogueSO dialogueSO)
     {
+        waitingForEnd = false;
+        endReadyTime = 0f;
         currentDialogue = dialogueSO;
         dialogueIndex = 0;
         isDialogueActive = true;
+        IsDialogueActive = true;
         ShowDialogue();
     }
     public void AdvanceDialogue()
     {
+        if (currentDialogue == null || waitingForEnd) return;
         if (dialogueIndex < currentDialogue.lines.Length)
             ShowDialogue();
         else
@@ -60,7 +74,7 @@ public class DialogueManager : MonoBehaviour
     private void ShowChoice()
     {
         ClearChoices();
-        if (currentDialogue.options.Length > 0)
+        if (currentDialogue.options.Length > 0&&currentDialogue.options!=null)
         {
             for(int i = 0; i < currentDialogue.options.Length; i++)
             {
@@ -70,27 +84,28 @@ public class DialogueManager : MonoBehaviour
                 choiceButtons[i].onClick.AddListener(() =>ChooseOption(option.nextDialogue));
             }
             EventSystem.current.SetSelectedGameObject(choiceButtons[0].gameObject);
+            return;
         }
-        else
-        {
             if (currentDialogue.turnInQuestOnEnd != null &&QuestManager.Instance.IsQuestComplete(currentDialogue.turnInQuestOnEnd))
             {
                 QuestEvents.OnQuestTurnInRequested?.Invoke(currentDialogue.turnInQuestOnEnd);
                 EndDialogue();
+            return;
             }
-            else if (currentDialogue.offerQuestOnEnd != null)
+            if (currentDialogue.offerQuestOnEnd != null)
             {
                 EndDialogue();
                 QuestEvents.OnQuestOfferRequested?.Invoke(currentDialogue.offerQuestOnEnd);
+            return;
             }
-            else
+        waitingForEnd = true;
+        endReadyTime = Time.unscaledTime + 0.1f;
+            if(dialogueText!=null&&currentDialogue.lines.Length>0)
             {
-                choiceButtons[0].GetComponentInChildren<TMP_Text>().text = "End";
-                choiceButtons[0].onClick.AddListener(EndDialogue);
-                choiceButtons[0].gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(choiceButtons[0].gameObject);
+            dialogueText.text = currentDialogue.lines[currentDialogue.lines.Length - 1].text + "\n\n<Press any key to continue>";
             }
-        }     
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
     }
     private void ChooseOption(DialogueSO dialogueSO)
     {
@@ -104,8 +119,11 @@ public class DialogueManager : MonoBehaviour
     }
     private void EndDialogue()
     {
+        waitingForEnd = false;
+        endReadyTime = 0f;
         dialogueIndex = 0;
         isDialogueActive=false;
+        IsDialogueActive =false;
         ClearChoices();
 
         canvasGroup.alpha = 0;

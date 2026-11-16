@@ -8,6 +8,7 @@ public class QuestBoard : MonoBehaviour
 
     private void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (playerInRange && Input.GetButtonDown("Interact"))
         {
             bool canTurnIn = questToTurnIn != null && QuestEvents.IsQuestComplete?.Invoke(questToTurnIn)==true;

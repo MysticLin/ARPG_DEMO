@@ -61,13 +61,11 @@ public class QuestLogUI : MonoBehaviour
     #region 存放按钮点击的方法
     public void OnAcceptQuestClicked()
     {
+        if (questSO == null) return;
         QuestEvents.OnQuestAccepted?.Invoke(questSO);
         questManager.AcceptQuest(questSO);
-        SetCanvasState(completeCanvasGroup, false);
-        SetCanvasState(acceptCanvasGroup, false);
-        SetCanvasState(declineCanvasGroup,false);
         RefreshQuestList();
-        HandleQuestClicked(noAvailableQuestSO);
+        ShowQuestOffer(questSO);
     }
     public void OnDeclineQuestClicked()
     {
@@ -75,10 +73,10 @@ public class QuestLogUI : MonoBehaviour
     }
     public void OnCompleteQuestClicked()
     {
+        if (questSO == null) return;
         questManager.CompleteQuest(questSO);
         RefreshQuestList();
-        HandleQuestClicked(noAvailableQuestSO);
-        SetCanvasState(completeCanvasGroup, false);
+        ShowQuestOffer(questSO);
     }
     #endregion
     private void SetCanvasState(CanvasGroup group,bool activate)
@@ -104,8 +102,13 @@ public class QuestLogUI : MonoBehaviour
     }
    public void HandleQuestClicked(QuestSO questSO)
     {
+        if (questSO == null)
+        {
+            questNameText.text = "";
+            questDescriptionText.text = "";
+            return;
+        }
         this.questSO = questSO;
-
         questNameText.text = questSO.questName;
         questDescriptionText.text = questSO.questDirection;
         DisplayObjective();
@@ -119,7 +122,7 @@ public class QuestLogUI : MonoBehaviour
             if (i < questSO.objectives.Count)
             {
                 var objective=questSO.objectives[i];
-                QuestManager.Instance.UpdateObjectiveProgress(questSO, objective);
+                questManager.UpdateObjectiveProgress(questSO, objective);
                 int currentAmount = questManager.GetCurrentAmount(questSO, objective);
                 string progress = questManager.GetProgressText(questSO, objective);
                 bool isComplete=currentAmount>=objective.requiredAmount;

@@ -12,6 +12,7 @@ public class StatsUI : MonoBehaviour
     }
     private void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (Input.GetButtonDown("ToggleStats"))
         {
             if (statsOpen)

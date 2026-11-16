@@ -36,11 +36,11 @@ public class QuestManager : MonoBehaviour
     }
     public void AcceptQuest(QuestSO questSO)
     {
+        if (questSO == null) return;
+        if (IsQuestAccepted(questSO)) return;
         questProgress[questSO] = new Dictionary<QuestObjective, int>();
         foreach(var objective in questSO.objectives)
-        {
             UpdateObjectiveProgress(questSO, objective);
-        }
     }
     #endregion
     #region 任务完成区域
@@ -61,6 +61,9 @@ public class QuestManager : MonoBehaviour
     }
     public void CompleteQuest(QuestSO questSO)
     {
+        if(questSO==null)return;
+        if (!questProgress.ContainsKey(questSO)) return;
+        if (!IsQuestComplete(questSO)) return;
         questProgress.Remove(questSO);
         completedQuests.Add(questSO);
         foreach(var objective in questSO.objectives)
@@ -87,11 +90,20 @@ public class QuestManager : MonoBehaviour
         var progressDictionary = questProgress[questSO];
         int newAmount = 0;
         if (objective.targetItem != null)
-            newAmount = InventoryManager.Instance.GetItemQuantity(objective.targetItem);
-        else if (objective.targetLocation != null && GameManager.Instance.LocatioHistroyTracker.HasVisited(objective.targetLocation))
-        newAmount = objective.requiredAmount;
-        else if(objective.targetNpc!=null&&GameManager.Instance.DialogueHistoryTracker.HasSpokenWith(objective.targetNpc))
-            newAmount=objective.requiredAmount;
+        {
+            if (InventoryManager.Instance != null)
+                newAmount = InventoryManager.Instance.GetItemQuantity(objective.targetItem);
+        }
+        else if (objective.targetLocation != null)
+        {
+            if (GameManager.Instance != null && GameManager.Instance.LocatioHistroyTracker != null && GameManager.Instance.LocatioHistroyTracker.HasVisited(objective.targetLocation))
+                newAmount = objective.requiredAmount;
+        }
+        else if (objective.targetNpc != null)
+        {
+            if (GameManager.Instance != null && GameManager.Instance.DialogueHistoryTracker != null && GameManager.Instance.DialogueHistoryTracker.HasSpokenWith(objective.targetNpc))
+                newAmount = objective.requiredAmount;
+        }   
         progressDictionary[objective] = newAmount;
     }
     public string GetProgressText(QuestSO questSO,QuestObjective objective)

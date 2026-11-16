@@ -17,14 +17,15 @@ public class UIManager : MonoBehaviour
 
     public void ToggleMenu(CanvasGroup target)
     {
+        if (DialogueManager.IsDialogueActive) return;
         SetMenuState(statsMenu, false);
         SetMenuState(skillsMenu,false);
         SetMenuState(questsMenu, false);
-
         SetMenuState(target, true);
     }
     public void ToggleMainMenu()
     {
+        if (DialogueManager.IsDialogueActive) return;
         isMenuActive = !isMenuActive;
         SetMenuState(menuBar, isMenuActive);
         menuToggleImage.sprite =isMenuActive ? closeSprite : openSprite;

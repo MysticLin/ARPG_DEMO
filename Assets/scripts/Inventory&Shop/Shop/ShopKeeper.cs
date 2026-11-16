@@ -36,6 +36,7 @@ public class ShopKeeper : MonoBehaviour
 
     void Update()
     {
+        if (DialogueManager.IsDialogueActive) return;
         if (shopManager == null || ShopCanvasGroup == null) return;
         if (playerInRange)
         {
