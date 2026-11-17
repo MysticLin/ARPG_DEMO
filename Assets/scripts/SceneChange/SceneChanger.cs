@@ -8,6 +8,7 @@ public class SceneChanger : MonoBehaviour
     public Animator fadeAnim;
     public float fadeTime = 0.5f;
     public Vector2 newPlayerPosition;
+    public string spwanId;
     private Transform player;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -22,7 +23,13 @@ public class SceneChanger : MonoBehaviour
     IEnumerator DelayFade()
     {
         yield return new WaitForSeconds(fadeTime);
-        player.position = newPlayerPosition;
+        if (SceneLoader.Instance != null)
+        {
+            SceneLoader.Instance.LoadScene(sceneToLoad, spwanId);
+            yield break;
+        }
+        if(player!=null)
+            player.position = newPlayerPosition;
         SceneManager.LoadScene(sceneToLoad);
     }
 }
