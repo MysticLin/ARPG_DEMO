@@ -36,6 +36,7 @@ public class ShopKeeper : MonoBehaviour
 
     void Update()
     {
+        if (!isShopOpen && PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (shopManager == null || ShopCanvasGroup == null) return;
         if (playerInRange)
@@ -44,7 +45,7 @@ public class ShopKeeper : MonoBehaviour
             {
                 if (!isShopOpen)
                 {
-                    Time.timeScale = 0;
+                    PauseService.Instance?.Push();
                     currentShopkeeper = this;
                     isShopOpen = true;
                     ShopCanvasGroup.alpha = 1;
@@ -60,7 +61,7 @@ public class ShopKeeper : MonoBehaviour
                 }
                 else
                 {
-                    Time.timeScale = 1;
+                    PauseService.Instance?.Pop();
                     isShopOpen = false;
                     currentShopkeeper = null;
                     ShopCanvasGroup.alpha = 0;
@@ -100,6 +101,14 @@ public class ShopKeeper : MonoBehaviour
         {
             anim.SetBool("playerInRange", false);
             playerInRange = false;
+        }
+    }
+    private void OnDisable()
+    {
+        if (isShopOpen)
+        {
+            isShopOpen = false;
+            PauseService.Instance?.Pop();
         }
     }
 }

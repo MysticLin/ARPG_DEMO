@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class StatsUI : MonoBehaviour
@@ -17,7 +18,7 @@ public class StatsUI : MonoBehaviour
         {
             if (statsOpen)
             {
-                Time.timeScale = 1;
+                PauseService.Instance?.Pop();
                 UpdateAllStats();
                 statsCanvas.alpha = 0;
                 statsCanvas.blocksRaycasts = false;
@@ -25,7 +26,7 @@ public class StatsUI : MonoBehaviour
             }
             else
             {
-                Time.timeScale = 0;
+                PauseService.Instance?.Push();
                 UpdateAllStats();
                 statsCanvas.alpha = 1;
                 statsCanvas.blocksRaycasts = true;
@@ -47,5 +48,18 @@ public class StatsUI : MonoBehaviour
         UpdateDamage();
         UpdateSpeed();
        
+    }
+    private void OnDisable()
+    {
+     if(statsOpen)
+        {
+            statsOpen = false;
+            PauseService.Instance?.Pop();
+            if (statsCanvas != null)
+            {
+                statsCanvas.alpha = 0;
+                statsCanvas.blocksRaycasts = false;
+            }
+        }   
     }
 }

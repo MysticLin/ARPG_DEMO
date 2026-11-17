@@ -11,16 +11,29 @@ public class ToggleSkillTree : MonoBehaviour
         {
             if (skillTreeOpen)
             {
-                Time.timeScale = 1;
+                PauseService.Instance?.Pop();
                 statsCanvas.alpha = 0;
                 statsCanvas.blocksRaycasts = false;
                 skillTreeOpen = false;
             }
             else{
-                Time.timeScale = 0;
+                PauseService.Instance?.Push();
                 statsCanvas.alpha = 1;
                 statsCanvas.blocksRaycasts = true;
                 skillTreeOpen = true;
+            }
+        }
+    }
+    private void OnDisable()
+    {
+        if (skillTreeOpen)
+        {
+            skillTreeOpen = false;
+            PauseService.Instance?.Pop();
+            if (statsCanvas != null)
+            {
+                statsCanvas.alpha = 0;
+                statsCanvas.blocksRaycasts = false;
             }
         }
     }

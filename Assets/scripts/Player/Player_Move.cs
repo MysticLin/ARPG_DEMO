@@ -10,6 +10,7 @@ public class Player_Move : MonoBehaviour
     public Player_Combat player_Combat;
     private void Update()
     {
+        if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)return;
         if (DialogueManager.IsDialogueActive) return;
         if (state != PlayerState.Normal) return;
         if (Input.GetButtonDown("Slash")&&player_Combat!=null&&player_Combat.enabled)
@@ -19,6 +20,11 @@ public class Player_Move : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (PauseService.Instance!=null&&PauseService.Instance.IsPaused)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
         if (DialogueManager.IsDialogueActive)
         {
             rb.velocity = Vector2.zero;

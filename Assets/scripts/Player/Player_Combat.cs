@@ -16,6 +16,7 @@ public class Player_Combat : MonoBehaviour
     }
     public void Attack()
     {
+        if (PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (timer<=0)
@@ -27,6 +28,7 @@ public class Player_Combat : MonoBehaviour
     }
     public void DealDamage()
     {
+        if (PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (StatsManager.Instance==null)return;

@@ -8,6 +8,7 @@ public class QuestBoard : MonoBehaviour
 
     private void Update()
     {
+        if (PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (playerInRange && Input.GetButtonDown("Interact"))
         {

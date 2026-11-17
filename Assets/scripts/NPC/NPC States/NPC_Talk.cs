@@ -36,6 +36,7 @@ public class NPC_Talk : MonoBehaviour
     private void Update()
     {
         if (GameManager.Instance == null || GameManager.Instance.DialogueManager == null) return;
+        if (PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (Input.GetButtonDown("Interact"))
         {
             if (GameManager.Instance.DialogueManager.isDialogueActive)

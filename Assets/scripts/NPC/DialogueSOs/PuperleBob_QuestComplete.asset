@@ -27,5 +27,5 @@ MonoBehaviour:
   requiredNPCs: []
   requiredLocations: []
   requiredItems: []
-  removeAfterPlay: 0
+  removeAfterPlay: 1
   removeTheseOnplay: []
