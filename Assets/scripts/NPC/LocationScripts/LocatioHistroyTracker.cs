@@ -15,4 +15,21 @@ public class LocatioHistroyTracker : MonoBehaviour
     {
         return locationVisited.Contains(locationSO);
     }
+    public List<string> ExportVisitedLocationIds()
+    {
+        List<string> result = new();
+        foreach (LocationSO location in locationVisited)
+            if (location != null) result.Add(location.name);
+        return result;
+    }
+    public void ImportVisitedLocationIds(List<string> ids,ItemDatabase database)
+    {
+        locationVisited.Clear();
+        if (ids == null || database == null) return;
+        foreach(string id in ids)
+        {
+            LocationSO location=database.FindLocation(id);
+            if(location!=null)locationVisited.Add(location);
+        }
+    }
 }

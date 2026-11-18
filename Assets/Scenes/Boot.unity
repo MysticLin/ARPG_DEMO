@@ -919,7 +919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b48f6b6b99e8549a06127ca997bd1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemDatabase: {fileID: 0}
+  itemDatabase: {fileID: 11400000, guid: 8a9fc1af8b8dba84d8aac1feb4cc26c0, type: 2}
 --- !u!1001 &1665577937
 PrefabInstance:
   m_ObjectHideFlags: 0

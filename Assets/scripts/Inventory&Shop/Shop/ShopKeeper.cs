@@ -36,6 +36,7 @@ public class ShopKeeper : MonoBehaviour
 
     void Update()
     {
+        if (QuestLogUI.IsOpen) return;
         if (!isShopOpen && PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (shopManager == null || ShopCanvasGroup == null) return;

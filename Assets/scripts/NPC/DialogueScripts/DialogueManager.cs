@@ -16,6 +16,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool isDialogueActive;
     private bool waitingForEnd;
+    private bool showingChoices;
     private float endReadyTime;
     public static bool IsDialogueActive { get;private set; }
     private  DialogueSO currentDialogue;
@@ -32,10 +33,15 @@ public class DialogueManager : MonoBehaviour
     }
     private void Update()
     {
-        if (!isDialogueActive || !waitingForEnd) return;
-        if (Time.unscaledTime < endReadyTime) return;
-        if(Input.anyKeyDown)
-            EndDialogue();
+        if (!IsDialogueActive) return;
+        if (waitingForEnd)
+        {
+            if (Time.unscaledTime < endReadyTime) return;
+            if (Input.anyKeyDown) EndDialogue();
+            return;
+        }
+       if(Input.GetButtonDown("Interact"))
+            AdvanceDialogue();
     }
     public bool CanStartDialogue()
     {
@@ -43,6 +49,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void StartDialogue(DialogueSO dialogueSO)
     {
+        showingChoices = false;
         waitingForEnd = false;
         endReadyTime = 0f;
         currentDialogue = dialogueSO;
@@ -53,7 +60,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void AdvanceDialogue()
     {
-        if (currentDialogue == null || waitingForEnd) return;
+        if (currentDialogue == null || waitingForEnd||showingChoices) return;
         if (dialogueIndex < currentDialogue.lines.Length)
             ShowDialogue();
         else
@@ -74,6 +81,7 @@ public class DialogueManager : MonoBehaviour
     private void ShowChoice()
     {
         ClearChoices();
+        showingChoices = true;
         if (currentDialogue.options.Length > 0&&currentDialogue.options!=null)
         {
             for(int i = 0; i < currentDialogue.options.Length; i++)
@@ -119,6 +127,7 @@ public class DialogueManager : MonoBehaviour
     }
     private void EndDialogue()
     {
+        showingChoices = false;
         waitingForEnd = false;
         endReadyTime = 0f;
         dialogueIndex = 0;

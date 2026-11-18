@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.LowLevel;
 
 public class QuestManager : MonoBehaviour
 {
@@ -116,11 +117,71 @@ public class QuestManager : MonoBehaviour
         else
             return "In Progress";
     }
-    public int GetCurrentAmount(QuestSO questSO,QuestObjective objctive)
+    public int GetCurrentAmount(QuestSO questSO, QuestObjective objctive)
     {
         if (questProgress.TryGetValue(questSO, out var objectiveDictionary))
-            if(objectiveDictionary.TryGetValue(objctive,out int amount))
+            if (objectiveDictionary.TryGetValue(objctive, out int amount))
                 return amount;
         return 0;
+    }
+    public List<QuestSaveEntry> ExportActiveQuests()
+    {
+        List<QuestSaveEntry> result = new();
+        foreach(var pair in questProgress)
+        {
+            QuestSO quest =pair.Key;
+            var entry = new QuestSaveEntry
+            {
+                questId = quest.name,
+                objectiveProgress = new int[quest.objectives.Count]
+            };
+            for(int i = 0; i < quest.objectives.Count; i++)
+            {
+                if (pair.Value.TryGetValue(quest.objectives[i],out int amount))
+                    entry.objectiveProgress[i] = amount;
+            }
+            result.Add(entry);
+        }
+        return result;
+    }
+    public List<string> ExportCompletedQuests()
+    {
+        List<string> result = new();
+        foreach(QuestSO quest in completedQuests)
+            if(quest!=null)result.Add(quest.name);
+        return result;
+    }
+    public void ImportSaveData(List<QuestSaveEntry> activeQuests,List<string> completedQuestIds,ItemDatabase database)
+    {
+        questProgress.Clear();
+        completedQuestIds.Clear();
+        if (database == null) return;
+        if (activeQuests != null)
+        {
+            foreach(QuestSaveEntry entry in activeQuests)
+            {
+                QuestSO quest=database.FindQuest(entry.questId);
+                if (quest == null) continue;
+                var progress = new Dictionary<QuestObjective, int>();
+                for(int i = 0; i < quest.objectives.Count; i++)
+                {
+                    int amount = 0;
+                    if (entry.objectiveProgress != null && i < entry.objectiveProgress.Length)
+                    {
+                        amount=entry.objectiveProgress[i];
+                    }
+                    progress[quest.objectives[i]]= amount; 
+                }
+                questProgress[quest]=progress;
+            }
+        }
+        if(completedQuests != null)
+        {
+            foreach(string id in completedQuestIds)
+            {
+                QuestSO quest=database.FindQuest(id);
+                if(quest!=null) completedQuests.Add(quest);
+            }
+        }
     }
 }

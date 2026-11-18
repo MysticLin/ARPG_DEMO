@@ -23,7 +23,7 @@ public class DialogueSO : ScriptableObject
     public bool IsConditionMet()
     {
         if (GameManager.Instance == null) return false;
-        if (requiredNPCs.Length > 0||requiredNPCs!=null)
+        if (requiredNPCs!= null&&requiredNPCs.Length > 0 )
         {
             if(GameManager.Instance.DialogueHistoryTracker==null)return false;
             foreach(var npc in requiredNPCs)
@@ -33,7 +33,7 @@ public class DialogueSO : ScriptableObject
                     return false;
             }
         }
-        if (requiredLocations.Length > 0||requiredLocations!=null)
+        if (requiredLocations!=null&&requiredLocations.Length > 0)
         {
             if (GameManager.Instance.LocatioHistroyTracker == null) return false;
             foreach (var location in requiredLocations)
@@ -43,7 +43,7 @@ public class DialogueSO : ScriptableObject
                     return false;
             }
         }
-        if (requiredItems.Length > 0&&requiredItems!=null)
+        if (requiredItems != null&&requiredItems.Length > 0)
         {
             if (InventoryManager.Instance == null) return false;
             foreach(var item in requiredItems)

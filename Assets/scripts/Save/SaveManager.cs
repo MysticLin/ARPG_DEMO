@@ -64,6 +64,18 @@ public class SaveManager : MonoBehaviour
                 quantity = slot.Quantity
             });
         }
+        if (QuestManager.Instance != null)
+        {
+            Data.activeQuests = QuestManager.Instance.ExportActiveQuests();
+            Data.completedQuestIds=QuestManager.Instance.ExportCompletedQuests();
+        }
+        if (GameManager.Instance != null)
+        {
+            if(GameManager.Instance.DialogueHistoryTracker != null) 
+                Data.spokenActorIds=GameManager.Instance.DialogueHistoryTracker.ExportSokenActorIds();
+            if(GameManager.Instance.LocatioHistroyTracker!=null)
+                Data.visitedLocationIds=GameManager.Instance.LocatioHistroyTracker.ExportVisitedLocationIds();
+        }
         File.WriteAllText(SavePath,JsonUtility.ToJson(Data,true));
         Debug.Log($"Saved:{SavePath}");
     }
@@ -97,13 +109,27 @@ public class SaveManager : MonoBehaviour
             {
                 foreach(ItemSaveEntry entry in Data.items)
                 {
-                    ItemSO item = itemDatabase.Find(entry.itemId);
+                    ItemSO item = itemDatabase.FindItem(entry.itemId);
                     if (item != null)
                         InventoryManager.Instance.AddItem(item, entry.quantity);
                 }
             }
             InventoryManager.Instance.SetGold(Data.gold);
         }
+        if (GameManager.Instance != null)
+        {
+            if (GameManager.Instance.DialogueHistoryTracker != null)
+                GameManager.Instance.DialogueHistoryTracker.ImportSpokenActorIds(Data.spokenActorIds, itemDatabase);
+            if (GameManager.Instance.LocatioHistroyTracker != null)
+            {
+                GameManager.Instance.LocatioHistroyTracker.ImportVisitedLocationIds(Data.visitedLocationIds, itemDatabase);
+            }
+        }
+        if (QuestManager.Instance != null)
+            QuestManager.Instance.ImportSaveData(Data.activeQuests, Data.completedQuestIds, itemDatabase);
+        QuestLogUI questLogUI=FindObjectOfType<QuestLogUI>(true);
+        if(questLogUI!=null)
+            questLogUI.RefreshQuestList();
     }
     private void LoadFile()
     {

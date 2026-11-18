@@ -35,21 +35,18 @@ public class NPC_Talk : MonoBehaviour
     }
     private void Update()
     {
+        if (QuestLogUI.IsOpen) return;
         if (GameManager.Instance == null || GameManager.Instance.DialogueManager == null) return;
         if (PauseService.Instance != null && PauseService.Instance.IsPaused) return;
+        if (DialogueManager.IsDialogueActive) return;
         if (Input.GetButtonDown("Interact"))
-        {
-            if (GameManager.Instance.DialogueManager.isDialogueActive)
-                GameManager.Instance.DialogueManager.AdvanceDialogue();
-            else
-            {
+        { 
                 if (GameManager.Instance.DialogueManager.CanStartDialogue())
                 {
                     CheckForNewConversation();
                     if (currentConversation == null) return;
                     GameManager.Instance.DialogueManager.StartDialogue(currentConversation);
                 }
-            }
         }
     }
     private void CheckForNewConversation()
@@ -59,7 +56,11 @@ public class NPC_Talk : MonoBehaviour
         for(int i = 0; i < conversations.Count; i++)
         {
             var convo = conversations[i];
-            if (convo == null && !convo.IsConditionMet()) continue;
+            if (convo == null || !convo.IsConditionMet()) continue;
+            if (convo.offerQuestOnEnd != null && QuestManager.Instance != null && (QuestManager.Instance.IsQuestAccepted(convo.offerQuestOnEnd) || QuestManager.Instance.GetCompleteQuest(convo.offerQuestOnEnd)))
+                continue;
+            if(convo.turnInQuestOnEnd!=null&&(QuestManager.Instance==null||!QuestManager.Instance.IsQuestComplete(convo.turnInQuestOnEnd)))
+                continue ;
             currentConversation = convo;
             if(convo.removeAfterPlay)
                 conversations.RemoveAt(i);

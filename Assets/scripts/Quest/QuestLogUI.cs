@@ -11,6 +11,7 @@ public class QuestLogUI : MonoBehaviour
     [SerializeField] private QuestRewardSlot[] rewardsSlots;
 
     private QuestSO questSO;
+    public static bool IsOpen {  get; private set; }
     [SerializeField] private QuestSO noAvailableQuestSO;
     [SerializeField] private QuestLogSlot[] questSlots;
     [SerializeField] private CanvasGroup questCanvas;
@@ -24,6 +25,7 @@ public class QuestLogUI : MonoBehaviour
     }
     private void OnDisable()
     {
+        IsOpen = false;
         QuestEvents.OnQuestOfferRequested -= ShowQuestOffer;
         QuestEvents.OnQuestTurnInRequested -= ShowQuestTurnIn;
     }
@@ -81,9 +83,11 @@ public class QuestLogUI : MonoBehaviour
     #endregion
     private void SetCanvasState(CanvasGroup group,bool activate)
     {
+        if(group==null)return;
         group.alpha = activate ? 1 : 0;
         group.blocksRaycasts = activate;
         group.interactable = activate;
+        if (group == questCanvas) IsOpen = activate;
     }
     public void RefreshQuestList()
     {

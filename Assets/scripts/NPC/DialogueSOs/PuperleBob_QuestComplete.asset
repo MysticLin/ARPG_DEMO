@@ -21,8 +21,7 @@ MonoBehaviour:
 '
   options: []
   offerQuestOnEnd: {fileID: 0}
-  requiredCompletedQuests:
-  - {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
+  requiredCompletedQuests: []
   turnInQuestOnEnd: {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
   requiredNPCs: []
   requiredLocations: []
