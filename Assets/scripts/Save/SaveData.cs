@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
@@ -11,4 +12,11 @@ public class SaveData
     public int currentHealth;
     public int maxHealth;
     public int gold;
+    public List<ItemSaveEntry> items = new();
+}
+[Serializable]
+public class ItemSaveEntry
+{
+    public string itemId;
+    public int quantity;
 }

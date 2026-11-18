@@ -1,4 +1,3 @@
-
 using System;
 
 public readonly struct InventorySlotView
@@ -130,5 +129,14 @@ public class Inventory
                 capacity += stackSize;
         }
         return capacity >= quantity;
+    }
+    public void Clear()
+    {
+        for(int i = 0; i < slots.Length; i++)
+        {
+            slots[i].itemSO=null;
+            slots[i].Quantity = 0;
+        }
+        Changed?.Invoke();
     }
 }

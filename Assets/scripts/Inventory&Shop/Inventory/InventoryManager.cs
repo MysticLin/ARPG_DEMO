@@ -12,6 +12,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject lootPrefab;
     public Transform player;
     public static event Action<int> OnExperienceGained;
+    public int SlotCount=>itemSlots!=null?itemSlots.Length:0;
     private Inventory inventory;
     private void Awake()
     {
@@ -162,5 +163,10 @@ public class InventoryManager : MonoBehaviour
         if(loot!=null)
         loot.Initialize(itemSO, quantity);
     }
-
+    public void ClearInventory()
+    {
+        if (inventory == null) return;
+        inventory.Clear();
+        RefreshSlots();
+    }
 }
