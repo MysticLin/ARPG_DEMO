@@ -72,6 +72,12 @@ public class StatsManager : MonoBehaviour
     {
         health.Revive();
     }
+    public void RestoreHealth(int current,int max)
+    {
+        if (health == null)
+            health = new Health(max);
+        health.Restore(current, max);
+    }
     public void KillSelf()
     {
         health.KillSelf();

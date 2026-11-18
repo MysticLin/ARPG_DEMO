@@ -62,6 +62,13 @@ public class Health
         OnChangeHealth?.Invoke(CurrentHealth,MaxHealth);
     }
     #endregion
+    public void Restore(int current,int max)
+    {
+        MaxHealth=Math.Max(max, 1);
+        CurrentHealth = Math.Clamp(current, 1, MaxHealth);
+        IsDead = false;
+        OnChangeHealth?.Invoke(CurrentHealth, MaxHealth);
+    }
     #region 复活:解除死亡，恢复满血
     public void Revive()
     {

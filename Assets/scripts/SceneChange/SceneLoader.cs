@@ -30,6 +30,7 @@ public class SceneLoader : MonoBehaviour
         isLoading = true;
         yield return SceneManager.LoadSceneAsync(sceneName);
         PlacePlayer(spawnId);
+        SaveManager.Instance?.ApplyAfterSceneLoad();
         isLoading = false;
     }
     private void PlacePlayer(string spawnId)

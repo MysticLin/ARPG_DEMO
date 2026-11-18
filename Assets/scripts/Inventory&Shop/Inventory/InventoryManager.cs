@@ -111,6 +111,11 @@ public class InventoryManager : MonoBehaviour
         gold += amount;
         UpdateGoldText();
     }
+    public void SetGold(int value)
+    {
+        gold=Math.Max(0, value);
+        UpdateGoldText();
+    }
     public  bool TrySpendGold(int amount)
     {
         if (amount < 0 || gold < amount) return false;

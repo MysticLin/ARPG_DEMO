@@ -825,6 +825,7 @@ GameObject:
   - component: {fileID: 1556945962}
   - component: {fileID: 1556945963}
   - component: {fileID: 1556945964}
+  - component: {fileID: 1556945965}
   m_Layer: 0
   m_Name: PersistentRoot
   m_TagString: Untagged
@@ -904,6 +905,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3b4565a48b6d694680c42dfa9e1db29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1556945965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556945959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b48f6b6b99e8549a06127ca997bd1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1665577937
