@@ -5,7 +5,7 @@ public class SaveData
 {
     public string sceneName;
     public string spwanId;
-
+    public int version;
     public float playerX;
     public float playerY;
 

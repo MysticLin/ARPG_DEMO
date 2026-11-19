@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.Content;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +8,7 @@ public class SaveManager : MonoBehaviour
 {
   public static SaveManager Instance {  get; private set; }
     public SaveData Data {  get; private set; }
+    public const int CurrentVersion = 1;
     public bool HasSave=>Data!=null;
     private bool applyOnNextLoad;
     private string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
@@ -41,6 +42,8 @@ public class SaveManager : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         StatsManager stats = StatsManager.Instance;
         InventoryManager inventory= InventoryManager.Instance;
+        if (SceneManager.GetActiveScene().name == "Boot")
+            return;
         if (player == null || stats == null || inventory == null)
             return;
         Data = new SaveData
@@ -53,6 +56,7 @@ public class SaveManager : MonoBehaviour
             maxHealth = stats.MaxHealth,
             gold=inventory.gold,
         };
+        Data.version=CurrentVersion;
         Data.items = new List<ItemSaveEntry>();
         for(int i = 0; i < inventory.SlotCount; i++)
         {
@@ -131,6 +135,10 @@ public class SaveManager : MonoBehaviour
         if(questLogUI!=null)
             questLogUI.RefreshQuestList();
     }
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
     private void LoadFile()
     {
         if (!File.Exists(SavePath))
@@ -138,7 +146,13 @@ public class SaveManager : MonoBehaviour
             Data = null;
             return;
         }
-        Data = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath));
+        SaveData loaded = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath));
+        if (loaded == null || loaded.version != CurrentVersion)
+        {
+            Data = null;
+            return;
+        }
+        Data = loaded;
     }
     public void DeleteSave()
     {
