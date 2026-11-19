@@ -8,7 +8,7 @@ public class SaveData
     public int version;
     public float playerX;
     public float playerY;
-
+    public string savedAt;
     public int currentHealth;
     public int maxHealth;
     public int gold;

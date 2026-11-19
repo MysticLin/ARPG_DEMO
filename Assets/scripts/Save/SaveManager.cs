@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,10 +9,12 @@ public class SaveManager : MonoBehaviour
 {
   public static SaveManager Instance {  get; private set; }
     public SaveData Data {  get; private set; }
-    public const int CurrentVersion = 1;
-    public bool HasSave=>Data!=null;
+    public const int CurrentVersion = 2;
+    public const int SlotCount = 3;
+    public int CurrentSlot { get; private set; }
     private bool applyOnNextLoad;
-    private string SavePath => Path.Combine(Application.persistentDataPath, "save.json");
+    public bool HasSave => Data != null;
+    private string SavePath(int slot) => Path.Combine(Application.persistentDataPath, $"save_{slot}.json");
     [SerializeField] private ItemDatabase itemDatabase;
     private void Awake()
     {
@@ -23,7 +26,7 @@ public class SaveManager : MonoBehaviour
             return;
         }
         Instance = this;
-        LoadFile();
+        SelectSlot(0);
     }
     private void OnDestroy()
     {
@@ -38,6 +41,10 @@ public class SaveManager : MonoBehaviour
             LoadAndReload();
     }
     public void Save()
+    {
+        Save(CurrentSlot);
+    }
+    public void Save(int slot)
     {
         GameObject player = GameObject.FindWithTag("Player");
         StatsManager stats = StatsManager.Instance;
@@ -54,18 +61,19 @@ public class SaveManager : MonoBehaviour
             playerY = player.transform.position.y,
             currentHealth = stats.CurrentHealth,
             maxHealth = stats.MaxHealth,
-            gold=inventory.gold,
+            gold = inventory.gold,
+            version = CurrentVersion
         };
-        Data.version=CurrentVersion;
+        Data.savedAt = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         Data.items = new List<ItemSaveEntry>();
         for(int i = 0; i < inventory.SlotCount; i++)
         {
-            InventorySlotView slot=inventory.GetSlot(i);
-            if(slot.IsEmpty)continue;
+            InventorySlotView slotView=inventory.GetSlot(i);
+            if(slotView.IsEmpty)continue;
             Data.items.Add(new ItemSaveEntry
             {
-                itemId = slot.itemSO.name,
-                quantity = slot.Quantity
+                itemId = slotView.itemSO.name,
+                quantity = slotView.Quantity
             });
         }
         if (QuestManager.Instance != null)
@@ -80,12 +88,28 @@ public class SaveManager : MonoBehaviour
             if(GameManager.Instance.LocatioHistroyTracker!=null)
                 Data.visitedLocationIds=GameManager.Instance.LocatioHistroyTracker.ExportVisitedLocationIds();
         }
-        File.WriteAllText(SavePath,JsonUtility.ToJson(Data,true));
-        Debug.Log($"Saved:{SavePath}");
+        File.WriteAllText(SavePath(slot),JsonUtility.ToJson(Data,true));
+        if (slot == CurrentSlot)
+            Data = Data;
+        Debug.Log($"Saved:{SavePath(slot)}");
+    }
+    public bool HasSaveInSlot(int slot)
+    {
+       SaveData data=ReadSlot(slot);
+        return data != null;
+    }
+    public void SelectSlot(int slot)
+    {
+        CurrentSlot = Math.Clamp(slot, 0, SlotCount - 1);
+        LoadFile(CurrentSlot);
     }
     public void LoadAndReload()
     {
-        LoadFile();
+        LoadAndReload(CurrentSlot);
+    }
+    public void LoadAndReload(int slot)
+    {
+        SelectSlot(slot);
         if (Data == null) return;
         RequestApplyAfterLoad();
         if (SceneLoader.Instance != null)
@@ -139,14 +163,22 @@ public class SaveManager : MonoBehaviour
     {
         Save();
     }
-    private void LoadFile()
+    public SaveData ReadSlot(int slot)
     {
-        if (!File.Exists(SavePath))
+        if(slot<0||slot>=SlotCount) return null;
+        string path = SavePath(slot);
+        if(!File.Exists(path))return null;
+        SaveData data=JsonUtility.FromJson<SaveData>(File.ReadAllText(path));
+        return data!=null&&data.version==CurrentVersion?data:null;
+    }
+    private void LoadFile(int slot)
+    {
+        if (!File.Exists(SavePath(slot)))
         {
             Data = null;
             return;
         }
-        SaveData loaded = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath));
+        SaveData loaded = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath(slot)));
         if (loaded == null || loaded.version != CurrentVersion)
         {
             Data = null;
@@ -156,10 +188,16 @@ public class SaveManager : MonoBehaviour
     }
     public void DeleteSave()
     {
-        if(File.Exists(SavePath))
-            File.Delete(SavePath);
-        Data = null;
-        applyOnNextLoad = false;
+        DeleteSlot(CurrentSlot);
     }
-
+    public void DeleteSlot(int slot)
+    {
+        if(File.Exists(SavePath(slot)))
+            File.Delete(SavePath(slot));
+        if(slot==CurrentSlot)
+        {
+            Data = null;
+            applyOnNextLoad=false;
+        }
+    }
 }
