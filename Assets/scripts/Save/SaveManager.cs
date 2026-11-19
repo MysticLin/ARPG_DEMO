@@ -140,5 +140,12 @@ public class SaveManager : MonoBehaviour
         }
         Data = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath));
     }
+    public void DeleteSave()
+    {
+        if(File.Exists(SavePath))
+            File.Delete(SavePath);
+        Data = null;
+        applyOnNextLoad = false;
+    }
 
 }
