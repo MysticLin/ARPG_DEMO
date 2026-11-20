@@ -6,7 +6,8 @@ public class Arrow : MonoBehaviour
     public Vector2 direction=Vector2.right;
     public float lifeSpawn = 2;
     public float speed;
-
+    public ArrowPool Pool { get;set; }
+    private Sprite normalSprite;
     public LayerMask enemyLayer;
     public LayerMask obstacleLayer;
     public SpriteRenderer sr;
@@ -16,16 +17,39 @@ public class Arrow : MonoBehaviour
     public float knockbackTime;
     public float stunTime;
     private bool hasHit;
-    void Start()
+    private void Awake()
     {
-        rb.velocity = direction*speed;
+        if(sr!=null)
+            normalSprite = sr.sprite;
+    }
+    public void Init(Vector2 dir)
+    {
+        transform.localScale = Vector3.one;
+        CancelInvoke();
+        hasHit = false;
+        direction = dir;
+        if (sr != null)
+            sr.sprite = normalSprite;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.velocity = dir * speed;
+        }
+        transform.SetParent(null);
         RotateArrow();
-        Destroy(gameObject, lifeSpawn);
+        Invoke(nameof(Despawn), lifeSpawn);
+    }
+    private void Despawn()
+    {
+        if (Pool != null)
+            Pool.Release(this);
+        else
+            Destroy(gameObject);
     }
     private void RotateArrow()
     {
         float angle=Mathf.Atan2(direction.y,direction.x)*Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -53,6 +77,8 @@ public class Arrow : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.isKinematic=true;
         transform.SetParent(target);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle+180f);
     }
 
 }
