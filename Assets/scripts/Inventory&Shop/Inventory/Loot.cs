@@ -7,6 +7,7 @@ public class Loot : MonoBehaviour
     public Animator anim;
     public bool canBePickedUp=true;
     public int quantity;
+    public LootPool Pool { get;set; }
     [SerializeField]private float pickupDelay = 0.8f;
     private bool picked;
     private void OnValidate()
@@ -16,9 +17,13 @@ public class Loot : MonoBehaviour
     }
     public void Initialize(ItemSO itemSO,int quantity)
     {
+        CancelInvoke();
+        picked = false;
         this.itemSO = itemSO;
         this.quantity = quantity;
         canBePickedUp = false;
+        if (anim != null)
+            anim.Play("Idle", 0, 0f);
         UpdateAppearance();
         Invoke(nameof(EnablePickup), pickupDelay);
     }
@@ -50,6 +55,13 @@ public class Loot : MonoBehaviour
         picked = true;
         if(anim!=null)
         anim.Play("LootPickUp");
-        Destroy(gameObject,0.5f);
+        Invoke(nameof(Despawn), 0.5f);
+    }
+    private void Despawn()
+    {
+        if (Pool != null)
+            Pool.Release(this);
+        else
+            Destroy(gameObject);
     }
 }

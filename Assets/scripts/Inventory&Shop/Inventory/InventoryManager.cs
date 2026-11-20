@@ -13,6 +13,7 @@ public class InventoryManager : MonoBehaviour
     public Transform player;
     public static event Action<int> OnExperienceGained;
     public int SlotCount=>itemSlots!=null?itemSlots.Length:0;
+    [SerializeField] private LootPool lootPool;
     private Inventory inventory;
     private void Awake()
     {
@@ -158,7 +159,13 @@ public class InventoryManager : MonoBehaviour
     private void DropLoot(ItemSO itemSO, int quantity)
     {
         if (itemSO == null || quantity <= 0) return;
-        if (lootPrefab == null || player == null) return;
+        if (player == null) return;
+        if (lootPool != null)
+        {
+            lootPool.Get(itemSO, quantity, player.position);
+            return;
+        }
+        if (lootPrefab == null) return;
         Loot loot = Instantiate(lootPrefab, player.position, Quaternion.identity).GetComponent<Loot>();
         if(loot!=null)
         loot.Initialize(itemSO, quantity);
