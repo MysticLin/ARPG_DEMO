@@ -4,6 +4,7 @@ public class SaveSlotsCanvas : MonoBehaviour
 {
     [SerializeField] private SaveSlotUI[] slots;
     [SerializeField] private GameObject bootMenuCanvas;
+    [SerializeField] private ConfirmDialog confirmDialog;
     private bool bound;
     private void OnEnable()
     {
@@ -38,6 +39,22 @@ public class SaveSlotsCanvas : MonoBehaviour
         if (slots == null) return;
         for(int i = 0; i < slots.Length; i++) 
             slots[i].Refresh();
+    }
+    public void RequestDelete(int slot)
+    {
+        if (SaveManager.Instance == null || !SaveManager.Instance.HasSaveInSlot(slot))
+            return;
+        if (confirmDialog == null)
+        {
+            DeleteSlot(slot);
+            return;
+        }
+        confirmDialog.Show($"Delete Slot {slot + 1}?", () => DeleteSlot(slot));
+    }
+    public void DeleteSlot(int slot)
+    {
+        SaveManager.Instance.DeleteSlot(slot);
+        RefreshAll();
     }
     public void OnslotClicked(int slot)
     {

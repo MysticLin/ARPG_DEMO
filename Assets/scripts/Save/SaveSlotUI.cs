@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SaveSlotUI : MonoBehaviour
+public class SaveSlotUI : MonoBehaviour,IPointerClickHandler
 {
     [SerializeField] private int slotIndex;
     [SerializeField] private Button slotButton;
@@ -14,7 +15,14 @@ public class SaveSlotUI : MonoBehaviour
         this.owner = owner;
         slotIndex = slot;
         slotButton.onClick.RemoveAllListeners();
-        slotButton.onClick.AddListener(() => owner.OnslotClicked(slotIndex));
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (owner == null) return;
+        if (eventData.button == PointerEventData.InputButton.Left)
+            owner.OnslotClicked(slotIndex);
+        else if (eventData.button == PointerEventData.InputButton.Right)
+            owner.RequestDelete(slotIndex);
     }
     public void Refresh()
     {

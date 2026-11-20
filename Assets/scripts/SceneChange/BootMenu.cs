@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,6 +9,7 @@ public class BootMenu : MonoBehaviour
     [SerializeField] private Button quitButton;
     [SerializeField] private SaveSlotsCanvas saveSlotsCanvas;
     [SerializeField] private string firstScene = "RPG";
+    [SerializeField] private ConfirmDialog confirmDialog;
     private void Start()
     {
         newGameButton.onClick.AddListener(NewGame);
@@ -18,8 +18,21 @@ public class BootMenu : MonoBehaviour
     }
     public void NewGame()
     {
-        SaveManager.Instance?.SelectSlot(0);
-        SaveManager.Instance?.DeleteSlot(0);
+        if (SaveManager.Instance == null) return;
+        if (SaveManager.Instance.HasSaveInSlot(0))
+        {
+            if (confirmDialog != null)
+            {
+                confirmDialog.Show("Start a new game? Slot 1 will be overwritten.",NewGameConfirmed);
+                return;
+            }
+        }
+        NewGameConfirmed();
+    }
+    private void NewGameConfirmed()
+    {
+        SaveManager.Instance.SelectSlot(0);
+        SaveManager.Instance.DeleteSlot(0);
         Load(firstScene, "Boot");
     }
     public void ContinueGame()
