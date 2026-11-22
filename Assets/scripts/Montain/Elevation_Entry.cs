@@ -4,11 +4,14 @@ public class Elevation_Entry : MonoBehaviour
 {
     public Collider2D[] mountainColliders;
     public Collider2D[] boundaryColliders;
+    public int level = 1;
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            foreach (Collider2D mountain in mountainColliders)
+        if (!collision.CompareTag("Player")) return;
+        Player_Move player=collision.GetComponentInParent<Player_Move>();
+        if(player!=null)
+            player.SetElevation(level);
+        foreach (Collider2D mountain in mountainColliders)
             {
                 mountain.enabled = false;
             }
@@ -16,8 +19,8 @@ public class Elevation_Entry : MonoBehaviour
             {
                 boundary.enabled = true;
             }
-            collision.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
-        }
-       
+       SpriteRenderer sr= collision.gameObject.GetComponent<SpriteRenderer>();
+        if (sr != null)
+            sr.sortingOrder = 15;
     }
 }

@@ -1,13 +1,17 @@
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class Elevation_Exit : MonoBehaviour
 {
     public Collider2D[] mountainColliders;
     public Collider2D[] boundaryColliders;
+    public int level = 0;
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
+        if (!collision.CompareTag("Player")) return;
+        Player_Move player=collision.GetComponentInParent<Player_Move>();
+        if(player!=null)
+            player.SetElevation(level);
             foreach (Collider2D mountain in mountainColliders)
             {
                 mountain.enabled = true;
@@ -16,8 +20,8 @@ public class Elevation_Exit : MonoBehaviour
             {
                 boundary.enabled = false;
             }
-            collision.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 10;
-        }
-
+        SpriteRenderer sr = collision.gameObject.GetComponent<SpriteRenderer>();
+        if(sr!=null)
+            sr.sortingOrder = 10;
     }
 }

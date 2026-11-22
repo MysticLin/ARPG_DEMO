@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Move : MonoBehaviour
@@ -8,6 +9,22 @@ public class Player_Move : MonoBehaviour
     public Rigidbody2D rb;
     public Animator anim;
     public Player_Combat player_Combat;
+    private readonly List<int> elevationStack = new();
+    public int CurrentElevation { get; private set; }
+    public void SetElevation(int level)
+    {
+        CurrentElevation = level;
+    }
+   /* public void PushElevation(int level)
+    {
+        elevationStack.Add(level);
+    }
+    public void PopElevation()
+    {
+        if(elevationStack.Count>0)
+            elevationStack.RemoveAt(elevationStack.Count-1);
+    }
+   */
     private void Update()
     {
         if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)return;
