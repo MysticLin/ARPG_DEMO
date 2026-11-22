@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Player_Health : MonoBehaviour
@@ -13,8 +14,15 @@ public class Player_Health : MonoBehaviour
     [SerializeField] private Player_Bow bow;
     [SerializeField] private Collider2D col;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer[] playerRenderers;
+    private Coroutine flashRoutine;
     private void OnEnable() => Bind();
     private void Start()=>Bind();
+    private void Awake()
+    {
+        if (playerRenderers == null || playerRenderers.Length == 0)
+            playerRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+    }
     private void Bind()
     {
         if (StatsManager.Instance == null) return;
@@ -37,6 +45,10 @@ public class Player_Health : MonoBehaviour
         if (StatsManager.Instance.isDead||Time.time<InvincibleTimeUntil)
             return false;
         StatsManager.Instance.UpdateHealth(-amount);
+        HitStop.instance?.Play(0.05f);
+        if(flashRoutine!=null)
+            StopCoroutine(flashRoutine);
+        flashRoutine = StartCoroutine(FlashDamage());
         if(HealthAnim!=null)HealthAnim.Play("HealthChange");
         InvincibleTimeUntil = Math.Max(Time.time + InvincibleTime,InvincibleTimeUntil);
         return !health.IsDead;
@@ -44,6 +56,7 @@ public class Player_Health : MonoBehaviour
     public void PlayDead()
     {
         if (health==null) return;
+        PauseService.Instance?.Push();
         ResetSet();
         SetControl(false);
         if(rb!=null)rb.velocity = Vector2.zero;
@@ -56,7 +69,8 @@ public class Player_Health : MonoBehaviour
     }
     public void PlayRevive()
     {
-        if(health==null)return;
+        if(health==null||!health.IsDead)return;
+        PauseService.Instance?.Pop();
         health.Revive();
         if(rb!=null)rb.velocity=Vector2.zero;
         SetControl(true);
@@ -79,5 +93,22 @@ public class Player_Health : MonoBehaviour
         if (move != null) move.ResetState();
         if (combat != null) combat.ResetState();
         if (bow != null) bow.ResetState();
+    }
+    private IEnumerator FlashDamage()
+    {
+        Color[] originals = new Color[playerRenderers.Length];
+        for(int i = 0; i < playerRenderers.Length; i++)
+        {
+            if (playerRenderers[i] == null) continue;
+            originals[i]=playerRenderers[i].color;
+            playerRenderers[i].color = Color.red;
+        }
+        yield return new WaitForSecondsRealtime(0.08f);
+        for(int i = 0; i < playerRenderers.Length; i++)
+        {
+            if (playerRenderers[i]!=null)
+                playerRenderers[i].color=originals[i];
+        }
+        flashRoutine = null;
     }
 }

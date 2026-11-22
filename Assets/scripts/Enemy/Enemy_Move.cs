@@ -22,6 +22,7 @@ public class Enemy_Move : MonoBehaviour
     public float attackRange = 2;
     public float attackCooldown = 2;
     private float attackCooldownTimer;
+    private float attackStateEndTime;
     [Header("巡逻/脱战")]
     [SerializeField] private float patrolRadius = 3f;
     [SerializeField] private float patrolWaitTime = 1.5f;
@@ -57,7 +58,7 @@ public class Enemy_Move : MonoBehaviour
         if (enemyState == EnemyState.Knockback)
             return;
         if(attackCooldown>0f)
-            attackCooldown-=Time.deltaTime;
+            attackCooldownTimer-=Time.deltaTime;
         CheckForPlayer();
         switch (enemyState)
         {
@@ -76,6 +77,8 @@ public class Enemy_Move : MonoBehaviour
             case EnemyState.Attacking:
                 if (rb != null)
                     rb.velocity = Vector2.zero;
+                if (Time.unscaledTime >= attackStateEndTime)
+                    ChangeState(EnemyState.Idle);
                 break;
 
             case EnemyState.Returning:
@@ -211,15 +214,9 @@ public class Enemy_Move : MonoBehaviour
             }
             else
             {
-                if(rb!=null)
-                    rb.velocity = Vector2.zero;
+                rb.velocity = Vector2.zero;
                 ChangeState(EnemyState.Idle);
             }
-            return;
-        }
-        if (Vector2.Distance(transform.position, homePosition) > leashRange)
-        {
-            ChangeState(EnemyState.Returning);
             return;
         }
         ChangeState(EnemyState.Chasing);
@@ -279,8 +276,12 @@ public class Enemy_Move : MonoBehaviour
             else if (newstate == EnemyState.Chasing || newstate == EnemyState.Patrolling
                 || newstate == EnemyState.Returning)
                 anim.SetBool("isChasing", true);
-            else if (newstate ==EnemyState.Attacking)
+            else if (newstate == EnemyState.Attacking)
+            {
                 anim.SetBool("isAttacking", true);
+                attackStateEndTime = Time.unscaledTime + 0.8f;
+            }
+               
         }
     }
     private void OnDrawGizmosSelected()

@@ -33,6 +33,7 @@ public class Enemy_Health : MonoBehaviour
         {
             if(anim!=null)anim.SetTrigger("isHurt");
             health.TakeDamage(-amount);
+            HitStop.instance?.Play(0.05f);
         }
         else if(amount>0)health.Heal(amount);
        return !health.IsDead;
