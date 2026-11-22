@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 267008781}
   - component: {fileID: 267008783}
   - component: {fileID: 267008782}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: no-co-h
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16543,13 +16543,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  attackRange: 1.2
-  attackCooldown: 2
   playerDetectRange: 5
   detectionPoint: {fileID: 686575495}
   playerMark:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attackRange: 1.2
+  attackCooldown: 2
+  patrolRadius: 3
+  patrolWaitTime: 1.5
+  leashRange: 8
+  loseTargetTime: 2
+  idleTime: 1.5
 --- !u!95 &1550166542
 Animator:
   serializedVersion: 5
