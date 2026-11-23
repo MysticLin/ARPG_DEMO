@@ -11,6 +11,8 @@ public class DialogueSO : ScriptableObject
     public QuestSO[] requiredCompletedQuests;
     [Header("任务提交（可选择）")]
     public QuestSO turnInQuestOnEnd;
+    [Header("限制任务重复提交(可选)")]
+    public QuestSO forbiddenQuest;
 
     [Header("对话要求（可选择）")]
     public ActorSO[] requiredNPCs;
@@ -58,10 +60,14 @@ public class DialogueSO : ScriptableObject
             if (QuestManager.Instance == null) return false;
             foreach (var quest in requiredCompletedQuests)
             {
-                if (!QuestManager.Instance.IsQuestComplete(quest))
+                if(quest==null)continue;
+                if (!QuestManager.Instance.GetCompleteQuest(quest))
                     return false;
             }
         }
+        if (forbiddenQuest != null && QuestManager.Instance != null && (QuestManager.Instance.IsQuestAccepted(forbiddenQuest) ||
+            QuestManager.Instance.GetCompleteQuest(forbiddenQuest)))
+            return false;
         return true;
     }
 }
@@ -76,5 +82,4 @@ public class DialogueOption
 {
     public string optionText;
     public DialogueSO nextDialogue;
-    public QuestSO offerQuest;
 }

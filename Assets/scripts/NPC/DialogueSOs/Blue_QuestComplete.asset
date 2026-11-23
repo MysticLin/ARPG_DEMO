@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
-  m_Name: PuperleBob_Require_FoundEveryone_Complete
+  m_Name: Blue_QuestComplete
   m_EditorClassIdentifier: 
   lines:
-  - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
-    text: "\u4F60\u627E\u5230\u4E86\u6211\u6240\u6709\u7684\u5144\u5F1F\n"
+  - speaker: {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
+    text: "\u606D\u559C\u4F60\u5B8C\u6210\u4E86\u6211\u7684\u4EFB\u52A1"
   options: []
+  offerQuestOnEnd: {fileID: 0}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 11400000, guid: 60e60b9f03093474bb9b1e1fe1d602ff, type: 2}
+  forbiddenQuest: {fileID: 0}
   requiredNPCs:
-  - {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
   - {fileID: 11400000, guid: 5a733ebc25262dc43bb8253b4653b937, type: 2}
   requiredLocations: []
   requiredItems: []
-  removeAfterPlay: 1
+  removeAfterPlay: 0
   removeTheseOnplay:
-  - {fileID: 11400000}
-  - {fileID: 11400000, guid: 3175416f2dc212b48910bd99b4bafeb8, type: 2}
-  - {fileID: 11400000, guid: 2617d155c0acea6419d466e3669e5500, type: 2}
+  - {fileID: 11400000, guid: 2c7ccc4d721f65d4187cde4110cf11fa, type: 2}

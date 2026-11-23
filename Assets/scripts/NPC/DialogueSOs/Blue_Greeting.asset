@@ -14,6 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speaker: {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
-    text: "\u4F60\u597D\u6211\u662F\u84DDBob"
+    text: "\u4F60\u597D\u6211\u662F\u84DDBob\uFF0C\u5982\u679C\u4F60\u5B8C\u6210\u4E86\u6211\u5144\u5F1F\u7684\u4EFB\u52A1\uFF0C\u6211\u5C06\u4F1A\u7ED9\u4F60\u65B0\u4EFB\u52A1"
   options: []
+  offerQuestOnEnd: {fileID: 0}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 0}
   requiredNPCs: []
+  requiredLocations: []
+  requiredItems: []
+  removeAfterPlay: 0
+  removeTheseOnplay: []

@@ -12,18 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe258fff2348c44ca45a0a408a93125, type: 3}
   m_Name: Quest_LikeThis
   m_EditorClassIdentifier: 
-  questName: Like this
+  questName: Kill enemy
   questLevel: 3
-  questDirection: 'It is so beautiful game
-
-'
+  questDirection: "\u6211\u9700\u8981\u4F60\u6740\u4E00\u4E9B\u654C\u4EBA\u5E76\u4E14\u83B7\u5F97\u4E00\u4E9B\u4E1C\u897F"
   objectives:
   - description: Collection 3 Mus
     target: {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
     requiredAmount: 3
-  - description: Visit the Greet Hills
-    target: {fileID: 11400000, guid: 9b634a9838fae75408d06ff45523d510, type: 2}
-    requiredAmount: 1
+  - description: Collection 3 Mus
+    target: {fileID: 11400000, guid: 0870070c71669b644b350b30e98e8204, type: 2}
+    requiredAmount: 3
   rewards:
   - itemSO: {fileID: 11400000, guid: 3abf885019de65f49bd29c4efb371090, type: 2}
     quantity: 10

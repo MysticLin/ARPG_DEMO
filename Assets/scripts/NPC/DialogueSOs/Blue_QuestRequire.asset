@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56add096ef4024c418f9e285c85d2911, type: 3}
+  m_Name: Blue_QuestRequire
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
+    text: "\u4F60\u597D\uFF0C\u73A9\u5BB6\uFF0C\u4F60\u5B8C\u6210\u4E86\u6211\u5144\u5F1F\u7684\u4EFB\u52A1\uFF0C\u6211\u8BA4\u53EF\u4F60\u4E86\uFF0C\u6211\u73B0\u5728\u6709\u4E2A\u4EFB\u52A1\u9700\u8981\u4F60\u53BB\u5B8C\u6210"
+  - speaker: {fileID: 11400000, guid: d37cb5d4e9682cc4b9941e3746c3ba23, type: 2}
+    text: "\u7B49\u6211\u60F3\u4E00\u4E0B"
+  options:
+  - optionText: "\u540C\u610F"
+    nextDialogue: {fileID: 11400000, guid: d792b136222468d4b82e8ed4b5289248, type: 2}
+  - optionText: "\u62D2\u7EDD"
+    nextDialogue: {fileID: 11400000, guid: 830c75d46773e85489a1e280a150a149, type: 2}
+  offerQuestOnEnd: {fileID: 0}
+  requiredCompletedQuests:
+  - {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
+  turnInQuestOnEnd: {fileID: 0}
+  forbiddenQuest: {fileID: 11400000, guid: 60e60b9f03093474bb9b1e1fe1d602ff, type: 2}
+  requiredNPCs: []
+  requiredLocations: []
+  requiredItems: []
+  removeAfterPlay: 1
+  removeTheseOnplay:
+  - {fileID: 11400000, guid: 2c7ccc4d721f65d4187cde4110cf11fa, type: 2}

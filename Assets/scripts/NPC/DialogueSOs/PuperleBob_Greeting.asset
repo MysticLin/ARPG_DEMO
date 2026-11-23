@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
-    text: 'Hello
-
-'
+    text: "\u6211\u6682\u65F6\u6CA1\u6709\u4EFB\u52A1\u9700\u8981\u7ED9\u4F60\uFF0C\u8BF7\u4F60\u5B8C\u6210\u6211\u7ED9\u4F60\u7684\u4EFB\u52A1\u6216\u8005\u53BB\u627E\u6211\u7684\u670B\u53CBBlue
+      Bob"
   options: []
   offerQuestOnEnd: {fileID: 0}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 0}
   requiredNPCs: []
   requiredLocations: []
   requiredItems: []

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class QuestLogUI : MonoBehaviour
 {
@@ -136,6 +138,13 @@ public class QuestLogUI : MonoBehaviour
         questDescriptionText.text = questSO.questDirection;
         DisplayObjective();
         DisplayRewards();
+        bool canTurnIn = questManager.IsQuestComplete(questSO);
+        SetCanvasState(completeCanvasGroup, canTurnIn);
+        if (canTurnIn)
+        {
+            SetCanvasState(acceptCanvasGroup, false);
+            SetCanvasState(declineCanvasGroup, false);
+        }
     }
 
     private void DisplayObjective()

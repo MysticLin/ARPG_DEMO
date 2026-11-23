@@ -123,12 +123,12 @@ public class DialogueManager : MonoBehaviour
     private void ChooseOption(DialogueSO dialogueSO)
     {
         if (dialogueSO == null)
-            EndDialogue();
-        else
         {
+            EndDialogue();
+            return ;
+        }
             ClearChoices();
             StartDialogue(dialogueSO);
-        }
     }
     private void EndDialogue()
     {

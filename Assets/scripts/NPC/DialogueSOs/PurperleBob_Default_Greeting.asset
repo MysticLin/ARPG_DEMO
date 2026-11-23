@@ -16,4 +16,11 @@ MonoBehaviour:
   - speaker: {fileID: 11400000, guid: d37cb5d4e9682cc4b9941e3746c3ba23, type: 2}
     text: "\u6211\u51C6\u5907\u597D\u4E86\n"
   options: []
+  offerQuestOnEnd: {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 0}
   requiredNPCs: []
+  requiredLocations: []
+  requiredItems: []
+  removeAfterPlay: 0
+  removeTheseOnplay: []

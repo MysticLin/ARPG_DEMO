@@ -16,11 +16,12 @@ MonoBehaviour:
   - speaker: {fileID: 11400000, guid: d8f0cab5424861b46881ae4570f3ff36, type: 2}
     text: "\u6211\u770B\u5230\u4E86\u4F60\u62E5\u6709\u4E86\u8FD9\u4E9B\u4E1C\u897F\n"
   options: []
+  offerQuestOnEnd: {fileID: 0}
+  requiredCompletedQuests: []
+  turnInQuestOnEnd: {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
   requiredNPCs: []
   requiredLocations: []
   requiredItems:
   - {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
-  - {fileID: 11400000, guid: 66b61617921d9e74f895695dfbd8bca9, type: 2}
-  removeAfterPlay: 1
-  removeTheseOnplay:
-  - {fileID: 11400000, guid: edca6c39ad4bc5847a573a7a7aabbc52, type: 2}
+  removeAfterPlay: 0
+  removeTheseOnplay: []
