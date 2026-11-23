@@ -13,7 +13,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text actorName;
     public TMP_Text dialogueText;
     public Button[] choiceButtons;
-
+    private bool pausedForDialogue;
     public bool isDialogueActive;
     private bool waitingForEnd;
     private bool showingChoices;
@@ -49,6 +49,11 @@ public class DialogueManager : MonoBehaviour
     }
     public void StartDialogue(DialogueSO dialogueSO)
     {
+        if (!IsDialogueActive)
+        {
+            PauseService.Instance?.Push();
+            pausedForDialogue = true;
+        }
         showingChoices = false;
         waitingForEnd = false;
         endReadyTime = 0f;
@@ -134,11 +139,16 @@ public class DialogueManager : MonoBehaviour
         isDialogueActive=false;
         IsDialogueActive =false;
         ClearChoices();
-
+       
         canvasGroup.alpha = 0;
         canvasGroup.blocksRaycasts = false;
         canvasGroup.interactable = false;
-        lastDialogueEndTime=Time.unscaledTime;
+        if (pausedForDialogue)
+        {
+            PauseService.Instance?.Pop();
+            pausedForDialogue = false;
+        }
+        lastDialogueEndTime =Time.unscaledTime;
     }
     private void ClearChoices()
     {
@@ -146,6 +156,14 @@ public class DialogueManager : MonoBehaviour
         {
             button.gameObject.SetActive(false);
             button.onClick.RemoveAllListeners();
+        }
+    }
+    private void OnDisable()
+    {
+        if (pausedForDialogue)
+        {
+            PauseService.Instance?.Pop();
+            pausedForDialogue = false;
         }
     }
 }

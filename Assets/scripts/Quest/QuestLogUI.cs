@@ -12,6 +12,7 @@ public class QuestLogUI : MonoBehaviour
 
     private QuestSO questSO;
     public static bool IsOpen {  get; private set; }
+    private bool pausedForQuestUI;
     [SerializeField] private QuestSO noAvailableQuestSO;
     [SerializeField] private QuestLogSlot[] questSlots;
     [SerializeField] private CanvasGroup questCanvas;
@@ -28,6 +29,11 @@ public class QuestLogUI : MonoBehaviour
         IsOpen = false;
         QuestEvents.OnQuestOfferRequested -= ShowQuestOffer;
         QuestEvents.OnQuestTurnInRequested -= ShowQuestTurnIn;
+        if (pausedForQuestUI)
+        {
+            PauseService.Instance?.Pop();
+            pausedForQuestUI = false;
+        }
     }
     #region 展示任务的方法
     public void ShowQuestOffer(QuestSO incomingQuestSO)
@@ -87,7 +93,20 @@ public class QuestLogUI : MonoBehaviour
         group.alpha = activate ? 1 : 0;
         group.blocksRaycasts = activate;
         group.interactable = activate;
-        if (group == questCanvas) IsOpen = activate;
+        if (group == questCanvas)
+        {
+            if (activate && !IsOpen)
+            {
+                PauseService.Instance?.Push();
+                pausedForQuestUI = true;
+            }
+            else if (!activate && IsOpen)
+            {
+                PauseService.Instance?.Pop();
+                pausedForQuestUI = false;
+            }
+            IsOpen = activate;
+        }
     }
     public void RefreshQuestList()
     {
