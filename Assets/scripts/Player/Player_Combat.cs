@@ -6,7 +6,17 @@ public class Player_Combat : MonoBehaviour
     public LayerMask enemyLayer;
     public Animator anim;
     public float cooldown = 2;
+    [SerializeField] private Player_Move playerMove;
+    private float attackPointBaseX;
     private float timer;
+    private void Awake()
+    {
+        if (playerMove == null)
+            playerMove = GetComponent<Player_Move>();
+
+        if (attackPoint != null)
+            attackPointBaseX = Mathf.Abs(attackPoint.localPosition.x);
+    }
     private void Update()
     {
         if (timer > 0)
@@ -32,6 +42,12 @@ public class Player_Combat : MonoBehaviour
         if (DialogueManager.IsDialogueActive) return;
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (StatsManager.Instance==null)return;
+        if (playerMove != null && attackPoint != null)
+        {
+            Vector3 point = attackPoint.localPosition;
+            point.x = attackPointBaseX * playerMove.facingDirection;
+            attackPoint.localPosition = point;
+        }
         Collider2D[] enemies = Physics2D.OverlapCircleAll(attackPoint.position, StatsManager.Instance.weaponRange, enemyLayer);
         if (enemies.Length == 0)return;
         if (!enemies[0].TryGetComponent(out Enemy_Health enemyHealth))return;

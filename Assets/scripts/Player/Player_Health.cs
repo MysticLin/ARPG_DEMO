@@ -15,6 +15,10 @@ public class Player_Health : MonoBehaviour
     [SerializeField] private Collider2D col;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer[] playerRenderers;
+    [SerializeField] private GameObject deathEffectPrefab;
+    [SerializeField] private Animator anim;
+    [SerializeField] private float deadAnimTime = 0.6f;
+    [SerializeField] private float boneLifeTime = 1f;
     private Coroutine flashRoutine;
     private void OnEnable() => Bind();
     private void Start()=>Bind();
@@ -56,16 +60,12 @@ public class Player_Health : MonoBehaviour
     public void PlayDead()
     {
         if (health==null) return;
-        PauseService.Instance?.Push();
         ResetSet();
         SetControl(false);
         if(rb!=null)rb.velocity = Vector2.zero;
-        if (DeadCanvas != null)
-        {
-            DeadCanvas.alpha = 1;
-            DeadCanvas.blocksRaycasts = true;
-            DeadCanvas.interactable = true;
-        }
+        if (anim != null)
+            anim.Play("Dead", 0, 0f);
+        StartCoroutine(DeathRoutine());
     }
     public void PlayRevive()
     {
@@ -73,6 +73,11 @@ public class Player_Health : MonoBehaviour
         PauseService.Instance?.Pop();
         health.Revive();
         if(rb!=null)rb.velocity=Vector2.zero;
+        if (anim != null) anim.Play("Idle", 0, 0f);
+        Vector3 scale = transform.localScale;
+        scale.x=Mathf.Abs(scale.x);
+        if (scale.x < 0.01f) scale.x = 1f;
+        transform.localScale = scale;
         SetControl(true);
         ResetSet();
         InvincibleTimeUntil = Time.time + InvincibleTime;
@@ -110,5 +115,35 @@ public class Player_Health : MonoBehaviour
                 playerRenderers[i].color=originals[i];
         }
         flashRoutine = null;
+    }
+    private IEnumerator DeathRoutine()
+    {
+        yield return new WaitForSeconds(deadAnimTime);
+        foreach(var sr in playerRenderers)
+        {
+            if (sr != null)
+                sr.enabled = false;
+        }
+        if (deathEffectPrefab != null)
+        {
+            if (deathEffectPrefab != null)
+            {
+                GameObject root = new GameObject("BoneFall");
+                root.transform.position = transform.position;
+                root.transform.rotation = Quaternion.identity;
+                GameObject fx = Instantiate(deathEffectPrefab, root.transform);
+                fx.transform.localPosition = Vector3.zero;
+                fx.transform.localRotation = Quaternion.identity;
+                Destroy(root, boneLifeTime);
+            }
+        }
+        yield return new WaitForSeconds(boneLifeTime);
+        PauseService.Instance?.Push();
+        if (DeadCanvas != null)
+        {
+            DeadCanvas.alpha = 1;
+            DeadCanvas.blocksRaycasts = true;
+            DeadCanvas.interactable = true;
+        }
     }
 }

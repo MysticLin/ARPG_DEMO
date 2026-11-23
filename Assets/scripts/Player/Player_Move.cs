@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player_Move : MonoBehaviour
 {
     public PlayerState state {  get; private set; }=PlayerState.Normal;
+    [SerializeField] private SpriteRenderer[] visuals;
     public int facingDirection = 1;
     public Rigidbody2D rb;
     public Animator anim;
@@ -15,16 +16,23 @@ public class Player_Move : MonoBehaviour
     {
         CurrentElevation = level;
     }
-   /* public void PushElevation(int level)
+    /* public void PushElevation(int level)
+     {
+         elevationStack.Add(level);
+     }
+     public void PopElevation()
+     {
+         if(elevationStack.Count>0)
+             elevationStack.RemoveAt(elevationStack.Count-1);
+     }
+    */
+    public void Awake()
     {
-        elevationStack.Add(level);
+        if(visuals==null||visuals.Length==0)
+            visuals=GetComponentsInChildren<SpriteRenderer>(true);
+        if (visuals != null && visuals.Length > 0 && visuals[0]!=null)
+            facingDirection = visuals[0].flipX ? -1 : 1;
     }
-    public void PopElevation()
-    {
-        if(elevationStack.Count>0)
-            elevationStack.RemoveAt(elevationStack.Count-1);
-    }
-   */
     private void Update()
     {
         if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)return;
@@ -56,10 +64,12 @@ public class Player_Move : MonoBehaviour
             return;
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
-            if (horizontal > 0 && transform.localScale.x < 0 || horizontal < 0 && transform.localScale.x > 0)
-            {
-                Flip();
-            }
+        if (Mathf.Abs(horizontal) > 0.01f)
+        {
+            int dir = horizontal > 0 ? 1 : -1;
+            if (dir != facingDirection)
+                ApplyFacing(dir);
+        }
             anim.SetFloat("horizontal", Mathf.Abs(horizontal));
             anim.SetFloat("vertical", Mathf.Abs(vertical));
 
@@ -88,11 +98,7 @@ public class Player_Move : MonoBehaviour
     public void SetFacing(float x)
     {
         if(Mathf.Abs(x)<0.01f)return;
-        int dir=x>0 ? 1 : -1;
-        facingDirection = dir;
-        Vector3 scale=transform.localScale;
-        scale.x = Mathf.Abs(scale.x) * dir;
-        transform.localScale = scale;
+        ApplyFacing(x > 0 ? 1 : -1);
     }
     public void ResetState()
     {
@@ -108,10 +114,16 @@ public class Player_Move : MonoBehaviour
         if (state == PlayerState.KnockBack)
             state = PlayerState.Normal;
     }
-    private void Flip()
+    private void ApplyFacing(int dir)
     {
-        facingDirection *= -1;
-        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+        if (dir == facingDirection) return;
+        facingDirection=dir;
+        if (visuals == null) return;
+        foreach(var sr in visuals)
+        {
+            if (sr != null)
+                sr.flipX = dir < 0;
+        }
     }
 }
 public enum PlayerState

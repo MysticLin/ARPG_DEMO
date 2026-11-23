@@ -200,6 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343236d39e6b0794e89a2a086b99df5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visuals:
+  - {fileID: 2101561866486070047}
   facingDirection: 1
   rb: {fileID: 6192610873344217643}
   anim: {fileID: 9183011277307914947}
@@ -245,6 +247,11 @@ MonoBehaviour:
   bow: {fileID: 0}
   col: {fileID: 0}
   rb: {fileID: 0}
+  playerRenderers: []
+  deathEffectPrefab: {fileID: 5584947934338900934, guid: 56c091941f52b78468e860c18a32d77e, type: 3}
+  anim: {fileID: 9183011277307914947}
+  deadAnimTime: 0.6
+  boneLifeTime: 1
 --- !u!114 &275775630849408242
 MonoBehaviour:
   m_ObjectHideFlags: 0

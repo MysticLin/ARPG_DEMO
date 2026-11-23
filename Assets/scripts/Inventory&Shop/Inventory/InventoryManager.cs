@@ -160,15 +160,20 @@ public class InventoryManager : MonoBehaviour
     {
         if (itemSO == null || quantity <= 0) return;
         if (player == null) return;
+        DropLootAt(itemSO, quantity, player.position);
+    }
+    public void DropLootAt(ItemSO itemSO,int quantity,Vector2 position)
+    {
+        if(itemSO == null || quantity <= 0)return;
         if (lootPool != null)
         {
-            lootPool.Get(itemSO, quantity, player.position);
+            lootPool.Get(itemSO, quantity, position);
             return;
         }
         if (lootPrefab == null) return;
-        Loot loot = Instantiate(lootPrefab, player.position, Quaternion.identity).GetComponent<Loot>();
+        Loot loot = Instantiate(lootPrefab, position, Quaternion.identity).GetComponent<Loot>();
         if(loot!=null)
-        loot.Initialize(itemSO, quantity);
+            loot.Initialize(itemSO, quantity);
     }
     public void ClearInventory()
     {

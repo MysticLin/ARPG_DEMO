@@ -1,13 +1,5 @@
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.Timeline;
+
 
 public class Enemy_Move : MonoBehaviour
 {
@@ -31,6 +23,8 @@ public class Enemy_Move : MonoBehaviour
     [SerializeField] private float idleTime = 1.5f;
     [Header("层级")]
     [SerializeField] private int elevationLevel = 0;
+    [Header("视觉")]
+    [SerializeField] private SpriteRenderer[] visuals;
     private readonly Collider2D[] hits = new Collider2D[4];
 
     private EnemyState enemyState;
@@ -45,6 +39,24 @@ public class Enemy_Move : MonoBehaviour
     private float idleTimer;
     private float patrolWaitTimer;
     private int facingDirection = -1;
+    private void Awake()
+    {
+        if (visuals == null || visuals.Length == 0)
+            visuals = GetComponentsInChildren<SpriteRenderer>(true);
+
+        // 统一根节点的缩放，避免负缩放和 flipX 叠加。
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+        transform.localScale = scale;
+
+        // 保持原来的默认朝向：之前根节点是 -1 缩放，现在用 flipX 实现。
+        facingDirection = -1;
+        foreach (var sr in visuals)
+        {
+            if (sr != null)
+                sr.flipX = true;
+        }
+    }
     private void Start()
     {
         homePosition=transform.position;
@@ -164,13 +176,19 @@ public class Enemy_Move : MonoBehaviour
     }
     private void SetFacing(float x)
     {
-        int direction=x>0f? 1 : -1;
+        int direction = x > 0f ? 1 : -1;
         if (direction == facingDirection)
             return;
-        facingDirection= direction;
-        Vector3 scale=transform.localScale;
-        scale.x = Mathf.Abs(scale.x) * direction;
-        transform.localScale = scale;
+
+        facingDirection = direction;
+
+        if (visuals == null) return;
+
+        foreach (var sr in visuals)
+        {
+            if (sr != null)
+                sr.flipX = direction < 0;
+        }
     }
     private void PickPatrolTarget()
     {

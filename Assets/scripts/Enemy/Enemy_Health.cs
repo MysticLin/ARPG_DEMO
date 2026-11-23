@@ -1,9 +1,14 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class Enemy_Health : MonoBehaviour
 {
+    [SerializeField] private EnemyDrop[] drops;
+    [SerializeField] private GameObject deathEffectPrefab;
+    [SerializeField] private float deadAnimTime = 0.6f;
+    [SerializeField] private float boneLifeTime = 1f;
     public int expReward = 3;
     public static Action<int> OnMonsterDefeated;
     [FormerlySerializedAs("maxHealth")]
@@ -50,6 +55,45 @@ public class Enemy_Health : MonoBehaviour
         }
         if(col!=null)col.enabled = false;
         OnMonsterDefeated?.Invoke(expReward);
-        Destroy(gameObject, DestoryTime);
+        if (InventoryManager.Instance != null && drops != null)
+        {
+            foreach(var drop in drops)
+            {
+                if (drop.item == null) continue;
+                if (UnityEngine.Random.value > drop.chance) continue;
+                int amount = UnityEngine.Random.Range(drop.minAmount, drop.maxAmount + 1);
+                Vector2 pos = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.3f;
+                InventoryManager.Instance.DropLootAt(drop.item, amount, pos);
+            }
+        }
+        if (anim != null)
+            anim.Play("Dead", 0, 0f);
+        StartCoroutine(DeathRoutine());
     }
+    private IEnumerator DeathRoutine()
+    {
+        yield return new WaitForSeconds(deadAnimTime);
+        foreach(var sr in GetComponentsInChildren<SpriteRenderer>())
+            sr.enabled = false;
+        if (deathEffectPrefab != null)
+        {
+            GameObject root = new GameObject("BoneFall");
+            root.transform.position = transform.position;
+            root.transform.rotation = Quaternion.identity;
+            GameObject fx = Instantiate(deathEffectPrefab, root.transform);
+            fx.transform.localPosition = Vector3.zero;
+            fx.transform.localRotation = Quaternion.identity;
+            Destroy(root, boneLifeTime);
+        }
+        yield return new WaitForSeconds(boneLifeTime);
+        Destroy(gameObject);
+    }
+}
+[Serializable]
+public class EnemyDrop
+{
+    public ItemSO item;
+    public int minAmount = 1;
+    public int maxAmount = 1;
+    [Range(0f, 1f)] public float chance = 0.5f;
 }
