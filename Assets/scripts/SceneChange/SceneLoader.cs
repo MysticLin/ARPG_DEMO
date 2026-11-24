@@ -30,7 +30,9 @@ public class SceneLoader : MonoBehaviour
         isLoading = true;
         yield return SceneManager.LoadSceneAsync(sceneName);
         PlacePlayer(spawnId);
+        WorldStateManager.Instance?.ApplyCurrentScene();
         SaveManager.Instance?.ApplyAfterSceneLoad();
+        WorldStateManager.Instance?.ApplyCurrentScene();
         SaveManager.Instance?.Save();
         isLoading = false;
     }

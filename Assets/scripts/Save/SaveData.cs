@@ -18,6 +18,7 @@ public class SaveData
     public List<string> visitedLocationIds=new();
     public List<string> spokenActorIds=new();
     public bool hasSlotIndex;
+    public List<SceneWorldState> worldStates = new();
 }
 [Serializable]
 public class ItemSaveEntry

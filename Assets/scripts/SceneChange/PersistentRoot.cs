@@ -12,6 +12,9 @@ public class PersistentRoot : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        if (WorldStateManager.Instance == null)
+            gameObject.AddComponent<WorldStateManager>();
     }
     private void OnDestroy()
     {

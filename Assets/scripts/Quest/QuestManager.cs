@@ -154,7 +154,7 @@ public class QuestManager : MonoBehaviour
     public void ImportSaveData(List<QuestSaveEntry> activeQuests,List<string> completedQuestIds,ItemDatabase database)
     {
         questProgress.Clear();
-        completedQuestIds.Clear();
+        completedQuests.Clear();
         if (database == null) return;
         if (activeQuests != null)
         {
@@ -175,7 +175,7 @@ public class QuestManager : MonoBehaviour
                 questProgress[quest]=progress;
             }
         }
-        if(completedQuests != null)
+        if(completedQuestIds != null)
         {
             foreach(string id in completedQuestIds)
             {

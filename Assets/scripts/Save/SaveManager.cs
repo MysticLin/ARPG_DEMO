@@ -89,6 +89,9 @@ public class SaveManager : MonoBehaviour
             if(GameManager.Instance.LocatioHistroyTracker!=null)
                 Data.visitedLocationIds=GameManager.Instance.LocatioHistroyTracker.ExportVisitedLocationIds();
         }
+        Data.worldStates = WorldStateManager.Instance != null
+    ? WorldStateManager.Instance.Export()
+    : new List<SceneWorldState>();
         File.WriteAllText(SavePath(slot),JsonUtility.ToJson(Data,true));
         if (slot == CurrentSlot)
             Data = Data;
@@ -172,6 +175,11 @@ public class SaveManager : MonoBehaviour
         QuestLogUI questLogUI=FindObjectOfType<QuestLogUI>(true);
         if(questLogUI!=null)
             questLogUI.RefreshQuestList();
+        if (WorldStateManager.Instance != null)
+        {
+            WorldStateManager.Instance.Import(Data.worldStates);
+            WorldStateManager.Instance.ApplyCurrentScene();
+        }
     }
     private void OnApplicationQuit()
     {

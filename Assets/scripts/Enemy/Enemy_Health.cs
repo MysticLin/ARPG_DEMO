@@ -10,6 +10,7 @@ public class Enemy_Health : MonoBehaviour
     [SerializeField] private float deadAnimTime = 0.6f;
     [SerializeField] private float boneLifeTime = 1f;
     public int expReward = 3;
+    public string enemyId;
     public static Action<int> OnMonsterDefeated;
     [FormerlySerializedAs("maxHealth")]
     [SerializeField] private int StartMaxHealth = 3;
@@ -26,6 +27,15 @@ public class Enemy_Health : MonoBehaviour
     {
         health = new Health(StartMaxHealth);
         health.OnDied += HandleDead;
+    }
+    private void Start()
+    {
+        if (string.IsNullOrEmpty(enemyId))
+        {
+            enemyId = $"{gameObject.scene.name}:{gameObject.name}:{transform.position.x:F2}:{transform.position.y:F2}";
+        }
+
+        ApplyWorldState(gameObject.scene.name);
     }
     private void OnDestroy()
     {
@@ -44,6 +54,14 @@ public class Enemy_Health : MonoBehaviour
         }
         else if(amount>0)health.Heal(amount);
        return !health.IsDead;
+    }
+    public void ApplyWorldState(string sceneName)
+    {
+        if (WorldStateManager.Instance == null) return;
+        if (string.IsNullOrEmpty(enemyId)) return;
+
+        if (WorldStateManager.Instance.IsEnemyDead(sceneName, enemyId))
+            gameObject.SetActive(false);
     }
     public void HandleDead()
     {
@@ -67,6 +85,13 @@ public class Enemy_Health : MonoBehaviour
                 Vector2 pos = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.3f;
                 InventoryManager.Instance.DropLootAt(drop.item, amount, pos);
             }
+        }
+        if (WorldStateManager.Instance != null &&
+    !string.IsNullOrEmpty(enemyId))
+        {
+            WorldStateManager.Instance.MarkEnemyDead(
+                gameObject.scene.name,
+                enemyId);
         }
         if (anim != null)
         {

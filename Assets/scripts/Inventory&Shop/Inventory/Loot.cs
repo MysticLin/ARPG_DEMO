@@ -7,9 +7,19 @@ public class Loot : MonoBehaviour
     public Animator anim;
     public bool canBePickedUp=true;
     public int quantity;
+    public string lootId;
     public LootPool Pool { get;set; }
     [SerializeField]private float pickupDelay = 0.8f;
     private bool picked;
+    private void Start()
+    {
+        if (Pool == null && string.IsNullOrEmpty(lootId))
+        {
+            lootId = $"{gameObject.scene.name}:{gameObject.name}:{transform.position.x:F2}:{transform.position.y:F2}";
+        }
+
+        ApplyWorldState(gameObject.scene.name);
+    }
     private void OnValidate()
     {
         if (itemSO != null)
@@ -53,7 +63,14 @@ public class Loot : MonoBehaviour
             return;
         }
         picked = true;
-        if(anim!=null)
+        if (WorldStateManager.Instance != null &&
+    !string.IsNullOrEmpty(lootId))
+        {
+            WorldStateManager.Instance.MarkLootRemoved(
+                gameObject.scene.name,
+                lootId);
+        }
+        if (anim!=null)
         anim.Play("LootPickUp");
         Invoke(nameof(Despawn), 0.5f);
     }
@@ -63,5 +80,13 @@ public class Loot : MonoBehaviour
             Pool.Release(this);
         else
             Destroy(gameObject);
+    }
+    public void ApplyWorldState(string sceneName)
+    {
+        if (WorldStateManager.Instance == null) return;
+        if (string.IsNullOrEmpty(lootId)) return;
+
+        if (WorldStateManager.Instance.IsLootRemoved(sceneName, lootId))
+            gameObject.SetActive(false);
     }
 }

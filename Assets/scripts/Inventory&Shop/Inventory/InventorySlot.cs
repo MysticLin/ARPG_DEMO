@@ -21,6 +21,8 @@ public class InventorySlot : MonoBehaviour,IPointerClickHandler,IBeginDragHandle
     private void Start()
     {
         inventoryManager = GetComponentInParent<InventoryManager>();
+        if (inventoryManager == null)
+            inventoryManager = InventoryManager.Instance;
     }
     private void OnEnable()
     {

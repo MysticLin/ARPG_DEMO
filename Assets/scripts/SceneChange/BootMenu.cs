@@ -33,6 +33,7 @@ public class BootMenu : MonoBehaviour
     {
         SaveManager.Instance.SelectSlot(0);
         SaveManager.Instance.DeleteSlot(0);
+        WorldStateManager.Instance?.Clear();
         Load(firstScene, "Boot");
     }
     public void ContinueGame()

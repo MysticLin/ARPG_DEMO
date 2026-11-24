@@ -34,6 +34,8 @@ public class StatsManager : MonoBehaviour
             return;
         }
         Instance = this;
+        if (startHealth <= 0)
+            startHealth = 100;
         health =new Health(startHealth);
     }
     private void OnEnable()
