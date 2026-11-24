@@ -178,7 +178,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -266,6 +266,7 @@ MonoBehaviour:
   loseTargetTime: 2
   idleTime: 1.5
   elevationLevel: 0
+  visuals: []
 --- !u!95 &2724045290956477026
 Animator:
   serializedVersion: 5
@@ -313,15 +314,17 @@ MonoBehaviour:
     maxAmount: 2
     chance: 0.3
   deathEffectPrefab: {fileID: 5584947934338900934, guid: 56c091941f52b78468e860c18a32d77e, type: 3}
+  deadAnimTime: 0.6
+  boneLifeTime: 1
   expReward: 3
   StartMaxHealth: 5
   DestoryTime: 1.5
   anim: {fileID: 2724045290956477026}
-  combat: {fileID: 0}
-  move: {fileID: 0}
-  col: {fileID: 0}
-  rb: {fileID: 0}
-  knock: {fileID: 0}
+  combat: {fileID: 2209906475559194753}
+  move: {fileID: 8250569638248760389}
+  col: {fileID: 6378930975941620841}
+  rb: {fileID: 2300849711124717815}
+  knock: {fileID: 5550619403553903472}
 --- !u!114 &5550619403553903472
 MonoBehaviour:
   m_ObjectHideFlags: 0

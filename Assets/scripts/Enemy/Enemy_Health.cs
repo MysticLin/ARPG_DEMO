@@ -38,6 +38,8 @@ public class Enemy_Health : MonoBehaviour
         {
             if(anim!=null)anim.SetTrigger("isHurt");
             health.TakeDamage(-amount);
+            DamageNumberManager.Spawn(-amount, transform.position + Vector3.up * 1f, Color.yellow);
+            CameraShake.Instance?.Shake(0.15f);
             HitStop.instance?.Play(0.05f);
         }
         else if(amount>0)health.Heal(amount);
@@ -67,7 +69,10 @@ public class Enemy_Health : MonoBehaviour
             }
         }
         if (anim != null)
+        {
+            anim.ResetTrigger("isHurt");
             anim.Play("Dead", 0, 0f);
+        }
         StartCoroutine(DeathRoutine());
     }
     private IEnumerator DeathRoutine()

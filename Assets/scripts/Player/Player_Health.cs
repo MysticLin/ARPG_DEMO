@@ -19,13 +19,27 @@ public class Player_Health : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private float deadAnimTime = 0.6f;
     [SerializeField] private float boneLifeTime = 1f;
+    private Color[] originalRendererColors;
+    private Vector3 originalScale;
+    private Quaternion originalRotation;
     private Coroutine flashRoutine;
+    private Coroutine deathRoutine;
     private void OnEnable() => Bind();
     private void Start()=>Bind();
     private void Awake()
     {
         if (playerRenderers == null || playerRenderers.Length == 0)
             playerRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        originalScale = transform.localScale;
+        originalRotation = transform.localRotation;
+        originalRendererColors = new Color[playerRenderers.Length];
+
+        for (int i = 0; i < playerRenderers.Length; i++)
+        {
+            if (playerRenderers[i] != null)
+                originalRendererColors[i] = playerRenderers[i].color;
+        }
     }
     private void Bind()
     {
@@ -49,6 +63,8 @@ public class Player_Health : MonoBehaviour
         if (StatsManager.Instance.isDead||Time.time<InvincibleTimeUntil)
             return false;
         StatsManager.Instance.UpdateHealth(-amount);
+        DamageNumberManager.Spawn(amount, transform.position + Vector3.up * 1f, Color.red);
+        CameraShake.Instance?.Shake(0.3f);
         HitStop.instance?.Play(0.05f);
         if(flashRoutine!=null)
             StopCoroutine(flashRoutine);
@@ -65,19 +81,39 @@ public class Player_Health : MonoBehaviour
         if(rb!=null)rb.velocity = Vector2.zero;
         if (anim != null)
             anim.Play("Dead", 0, 0f);
-        StartCoroutine(DeathRoutine());
+        deathRoutine=StartCoroutine(DeathRoutine());
     }
     public void PlayRevive()
     {
-        if(health==null||!health.IsDead)return;
+        if (deathRoutine!=null)
+        {
+            StopCoroutine(deathRoutine);
+            deathRoutine = null;
+        }
+        if (health==null||!health.IsDead)return;
         PauseService.Instance?.Pop();
         health.Revive();
         if(rb!=null)rb.velocity=Vector2.zero;
-        if (anim != null) anim.Play("Idle", 0, 0f);
-        Vector3 scale = transform.localScale;
-        scale.x=Mathf.Abs(scale.x);
-        if (scale.x < 0.01f) scale.x = 1f;
-        transform.localScale = scale;
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Play("Idle", 0, 0f);
+            anim.Update(0f);
+        }
+        if (playerRenderers != null)
+        {
+            for (int i = 0; i < playerRenderers.Length; i++)
+            {
+                if (playerRenderers[i] == null) continue;
+
+                playerRenderers[i].enabled = true;
+                if (originalRendererColors != null && i < originalRendererColors.Length)
+                    playerRenderers[i].color = originalRendererColors[i];
+            }
+        }
+
+        transform.localScale = originalScale;
+        transform.localRotation = originalRotation;
         SetControl(true);
         ResetSet();
         InvincibleTimeUntil = Time.time + InvincibleTime;

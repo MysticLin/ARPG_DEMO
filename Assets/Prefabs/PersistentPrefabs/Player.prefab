@@ -149,7 +149,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -242,11 +242,11 @@ MonoBehaviour:
   HealthAnim: {fileID: 0}
   InvincibleTime: 1
   DeadCanvas: {fileID: 0}
-  move: {fileID: 0}
-  combat: {fileID: 0}
-  bow: {fileID: 0}
-  col: {fileID: 0}
-  rb: {fileID: 0}
+  move: {fileID: 6644370159613050067}
+  combat: {fileID: 275775630849408242}
+  bow: {fileID: 73722191184431914}
+  col: {fileID: 5042550927257650873}
+  rb: {fileID: 6192610873344217643}
   playerRenderers: []
   deathEffectPrefab: {fileID: 5584947934338900934, guid: 56c091941f52b78468e860c18a32d77e, type: 3}
   anim: {fileID: 9183011277307914947}
@@ -270,6 +270,7 @@ MonoBehaviour:
     m_Bits: 64
   anim: {fileID: 9183011277307914947}
   cooldown: 2
+  playerMove: {fileID: 0}
 --- !u!114 &73722191184431914
 MonoBehaviour:
   m_ObjectHideFlags: 0
