@@ -39,6 +39,7 @@ public class Enemy_Move : MonoBehaviour
     private float idleTimer;
     private float patrolWaitTimer;
     private int facingDirection = -1;
+    public int FacingDirection => facingDirection;
     private void Awake()
     {
         if (visuals == null || visuals.Length == 0)
