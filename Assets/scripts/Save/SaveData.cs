@@ -17,12 +17,14 @@ public class SaveData
     public List<string> completedQuestIds=new();
     public List<string> visitedLocationIds=new();
     public List<string> spokenActorIds=new();
+    public bool hasSlotIndex;
 }
 [Serializable]
 public class ItemSaveEntry
 {
     public string itemId;
     public int quantity;
+    public int slotIndex;
 }
 [Serializable]
 public class QuestSaveEntry

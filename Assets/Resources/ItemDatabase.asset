@@ -18,10 +18,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66b61617921d9e74f895695dfbd8bca9, type: 2}
   - {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
   - {fileID: 11400000, guid: ed3850d5a1f0c364c967aac690e85f65, type: 2}
+  - {fileID: 11400000, guid: 0870070c71669b644b350b30e98e8204, type: 2}
   quests:
   - {fileID: 11400000, guid: 724abcb1f5f07e249b1564930bee9098, type: 2}
-  - {fileID: 11400000, guid: f71c10124adb52e4c95a8f89d08fede4, type: 2}
+  - {fileID: 11400000, guid: 60e60b9f03093474bb9b1e1fe1d602ff, type: 2}
   - {fileID: 11400000, guid: b725200a809b20240a0eff7c397eb907, type: 2}
+  - {fileID: 11400000, guid: 34cc2c261f4b1b44bad2bd5c53945494, type: 2}
   actors:
   - {fileID: 11400000, guid: d8fa19e529761c647a5882f58f97044c, type: 2}
   - {fileID: 11400000, guid: d37cb5d4e9682cc4b9941e3746c3ba23, type: 2}

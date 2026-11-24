@@ -5,9 +5,9 @@ using UnityEngine;
 
 public static class BuildRelease
 {
-    private const string OutputPath = @"D:\RPG\Builds\Release_v0.2\RPG.exe";
+    private const string OutputPath = @"D:\RPG\Builds\Release_v0.3\RPG.exe";
 
-    [MenuItem("Build/Build Release v0.2")]
+    [MenuItem("Build/Build Release v0.3")]
     public static void BuildFromMenu()
     {
         Build();

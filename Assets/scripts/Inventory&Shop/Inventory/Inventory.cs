@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public readonly struct InventorySlotView
 {
@@ -98,6 +99,62 @@ public class Inventory
         if(take>0)
             Changed?.Invoke();
         return take;
+    }
+    public bool MoveSlot(int from,int to)
+    {
+        if(from<0||to<0||from>=slots.Length||to>=slots.Length)
+            return false;
+        if(from==to)return false;
+        Slot a=slots[from];
+        Slot b=slots[to];
+        //目标为空
+        if (b.itemSO == null || b.Quantity <= 0)
+        {
+            b.itemSO = a.itemSO;
+            b.Quantity=a.Quantity;
+            a.itemSO = null;
+            a.Quantity = 0;
+        }
+        //同物品，堆叠
+        else if (a.itemSO == b.itemSO)
+        {
+            int stackSize = Mathf.Max(1, a.itemSO.stackSize);
+            int space= stackSize - b.Quantity;
+            if (space > 0)
+            {
+                int move = Mathf.Min(space, a.Quantity);
+                b.Quantity += move;
+                a.Quantity-=move;
+            }
+        }
+        //不同物品
+        else
+        {
+            ItemSO tempItem = a.itemSO;
+            int tempAmount = a.Quantity;
+            a.itemSO=b.itemSO;
+            a.Quantity = b.Quantity;
+            b.itemSO = tempItem;
+            b.Quantity = tempAmount;
+        }
+        Changed?.Invoke();
+        return true;
+    }
+    public void SetSlot(int index, ItemSO itemSO, int quantity)
+    {
+        if (index < 0 || index >= slots.Length) return;
+
+        Slot slot = slots[index];
+        slot.itemSO = itemSO;
+        slot.Quantity = Math.Max(0, quantity);
+
+        if (slot.Quantity <= 0)
+        {
+            slot.itemSO = null;
+            slot.Quantity = 0;
+        }
+
+        Changed?.Invoke();
     }
     public int Count(ItemSO itemSO)
     {

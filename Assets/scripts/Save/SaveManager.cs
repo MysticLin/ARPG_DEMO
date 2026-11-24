@@ -61,7 +61,8 @@ public class SaveManager : MonoBehaviour
             currentHealth = stats.CurrentHealth,
             maxHealth = stats.MaxHealth,
             gold = inventory.gold,
-            version = CurrentVersion
+            version = CurrentVersion,
+            hasSlotIndex = true
         };
         Data.savedAt = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         Data.items = new List<ItemSaveEntry>();
@@ -72,7 +73,8 @@ public class SaveManager : MonoBehaviour
             Data.items.Add(new ItemSaveEntry
             {
                 itemId = slotView.itemSO.name,
-                quantity = slotView.Quantity
+                quantity = slotView.Quantity,
+                slotIndex = i
             });
         }
         if (QuestManager.Instance != null)
@@ -137,8 +139,21 @@ public class SaveManager : MonoBehaviour
                 foreach(ItemSaveEntry entry in Data.items)
                 {
                     ItemSO item = itemDatabase.FindItem(entry.itemId);
-                    if (item != null)
-                        InventoryManager.Instance.AddItem(item, entry.quantity);
+                    if (item == null) continue;
+
+                    if (Data.hasSlotIndex)
+                    {
+                        InventoryManager.Instance.SetSlot(
+                            entry.slotIndex,
+                            item,
+                            entry.quantity);
+                    }
+                    else
+                    {
+                        InventoryManager.Instance.AddItem(
+                            item,
+                            entry.quantity);
+                    }
                 }
             }
             InventoryManager.Instance.SetGold(Data.gold);

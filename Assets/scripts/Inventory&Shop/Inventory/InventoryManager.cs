@@ -1,20 +1,32 @@
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
+    [Header("快捷栏")]
     public InventorySlot[] itemSlots;
+    [Header("背包")]
+    public InventorySlot[] backpackSlots;
+    [Header("其他")]
+    public CanvasGroup backpackCanvas;
+    private bool backpackOpen;
     public UseItem useItem;
     public int gold;
     public TMP_Text goldText;
     public GameObject lootPrefab;
     public Transform player;
     public static event Action<int> OnExperienceGained;
-    public int SlotCount=>itemSlots!=null?itemSlots.Length:0;
     [SerializeField] private LootPool lootPool;
     private Inventory inventory;
+    public bool BackpackOpen => backpackOpen;
+    public int QuickbarSlotCount=>itemSlots!=null?itemSlots.Length : 0;
+    public int BackpackSlotCount => backpackSlots != null ? backpackSlots.Length : 0;
+    public int SlotCount=>inventory!=null?inventory.SlotCount: 0;   
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,22 +35,32 @@ public class InventoryManager : MonoBehaviour
             return;
         }
         Instance = this;
-        int slotCount = itemSlots != null ? itemSlots.Length : 0;
-        inventory = new Inventory(slotCount);
+        int quickbarCount = QuickbarSlotCount;
+        int backpackCount = BackpackSlotCount;
+        int totalCount=quickbarCount+backpackCount;
+        inventory = new Inventory(totalCount);
         inventory.Changed += RefreshSlots;
-        if (itemSlots != null)
-        {
-            for(int i = 0; i < itemSlots.Length; i++)
-            {
-                if (itemSlots[i] != null)
-                    itemSlots[i].Bind(i);
-            }
-        }
+        BindSlots(itemSlots, 0);
+        BindSlots(backpackSlots, quickbarCount);
+        HideBackpackImmediate();
     }
     private void Start()
     {
        RefreshSlots();
         UpdateGoldText();
+    }
+    private void Update()
+    {
+        if (!Input.GetKeyDown(KeyCode.B))
+            return;
+        if (backpackOpen)
+        {
+            CloseBackpack();
+            return;
+        }
+        if (!CanOpenBackpack())
+            return;
+        OpenBackpack();
     }
     private void OnDestroy()
     {
@@ -47,9 +69,84 @@ public class InventoryManager : MonoBehaviour
         if(Instance==this)
             Instance = null;
     }
+    private void BindSlots(InventorySlot[] slots,int offset)
+    {
+        if (slots == null) return;
+        for(int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i]!=null)
+                slots[i].Bind(offset+i);
+        }
+    }
+    private bool CanOpenBackpack()
+    {
+       if(StatsManager.Instance!=null&&StatsManager.Instance.isDead)
+            return false;
+       if(DialogueManager.IsDialogueActive)
+            return false;
+       if(QuestLogUI.IsOpen)
+            return false;
+       if(ShopKeeper.currentShopkeeper!=null)
+            return false;
+       if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)
+            return false;
+       return true;
+    }
+    public void OpenBackpack()
+    {
+        if(backpackCanvas==null||backpackOpen)return;
+
+        EnsureBackpackSorting();
+
+        backpackOpen = true;
+        backpackCanvas.alpha = 1.0f;
+        backpackCanvas.blocksRaycasts = true;
+        backpackCanvas.interactable = true;
+        PauseService.Instance?.Push();
+    }
+
+    private void EnsureBackpackSorting()
+    {
+        Canvas canvas = backpackCanvas.GetComponent<Canvas>();
+        if (canvas == null)
+            canvas = backpackCanvas.gameObject.AddComponent<Canvas>();
+
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 1000;
+
+        if (backpackCanvas.GetComponent<GraphicRaycaster>() == null)
+            backpackCanvas.gameObject.AddComponent<GraphicRaycaster>();
+
+        backpackCanvas.transform.SetAsLastSibling();
+    }
+    public void CloseBackpack()
+    {
+        if (backpackCanvas == null || !backpackOpen) return;
+        backpackOpen= false;
+        backpackCanvas.alpha = 0f;
+        backpackCanvas.blocksRaycasts = false;
+        backpackCanvas.interactable = false;
+        PauseService.Instance?.Pop();
+    }
+    private void HideBackpackImmediate()
+    {
+        if (backpackCanvas == null) return;
+        backpackCanvas.alpha = 0f;
+        backpackCanvas.blocksRaycasts= false;
+        backpackCanvas.interactable = false;
+    }
     public InventorySlotView GetSlot(int index)
     {
         return inventory != null ? inventory.GetSlot(index) : default;
+    }
+    public void SetSlot(int index, ItemSO itemSO, int quantity)
+    {
+        if (inventory != null)
+            inventory.SetSlot(index, itemSO, quantity);
+    }
+    public bool MoveItem(int fromIndex,int toIndex)
+    {
+        return inventory!=null&&inventory.MoveSlot(fromIndex, toIndex);
     }
     public bool canAdd(ItemSO itemSO,int quantity = 1)
     {
@@ -147,15 +244,19 @@ public class InventoryManager : MonoBehaviour
     }
     public void RefreshSlots()
     {
-        if (inventory == null || itemSlots == null) return;
-        for(int i = 0; i < itemSlots.Length; i++)
+        RefreshGroup(itemSlots, 0);
+        RefreshGroup(backpackSlots, QuickbarSlotCount);
+    }
+    private void RefreshGroup(InventorySlot[] slots,int offset)
+    {
+        if (inventory == null || slots == null) return;
+        for(int i = 0; i < slots.Length; i++)
         {
-            if (itemSlots[i]==null)continue;
-            InventorySlotView slot=inventory.GetSlot(i);
-            itemSlots[i].Set(slot.itemSO, slot.Quantity);
+            if (slots[i]==null)continue;
+            InventorySlotView slot = inventory.GetSlot(offset + i);
+            slots[i].Set(slot.itemSO, slot.Quantity);
         }
     }
-   
     private void DropLoot(ItemSO itemSO, int quantity)
     {
         if (itemSO == null || quantity <= 0) return;
