@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: itemSO
       value: 
       objectReference: {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
+    - target: {fileID: 3646035517562255666, guid: de66f6e235773b344832b2d1b937f4f5, type: 3}
+      propertyPath: lootId
+      value: ms2
+      objectReference: {fileID: 0}
     - target: {fileID: 6864225732369856376, guid: de66f6e235773b344832b2d1b937f4f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.22
@@ -16919,6 +16923,10 @@ PrefabInstance:
       propertyPath: itemSO
       value: 
       objectReference: {fileID: 11400000, guid: 1b21ff9d689044a42a580a270852781d, type: 2}
+    - target: {fileID: 3646035517562255666, guid: de66f6e235773b344832b2d1b937f4f5, type: 3}
+      propertyPath: lootId
+      value: ms1
+      objectReference: {fileID: 0}
     - target: {fileID: 6864225732369856376, guid: de66f6e235773b344832b2d1b937f4f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.35
