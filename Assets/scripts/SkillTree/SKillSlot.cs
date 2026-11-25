@@ -69,4 +69,11 @@ public class SKillSlot : MonoBehaviour
             skillIcon.color=Color.black;
         }
     }
+    public void RestoreState(int savedLevel,bool savedUnlocked)
+    {
+        if (skillSO == null) return;
+        currentLevel = Mathf.Clamp(savedLevel, 0, skillSO.maxLevel);
+        isUnlocked=savedUnlocked;
+        UpdateUI();
+    }
 }

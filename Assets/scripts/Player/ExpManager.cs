@@ -56,4 +56,11 @@ public class ExpManager : MonoBehaviour
         expSlider.value = currentExp;
         currentLevelText.text = "Level:" + level;
     }
+    public void RestoreProgression(int savedLevel,int savedCurrentExp,int savedExpToLevel)
+    {
+        level = Mathf.Max(0, savedLevel);
+        currentExp = Mathf.Max(0, savedCurrentExp);
+        expToLevel = Mathf.Max(1, savedExpToLevel);
+        UpdateUI();
+    }
 }

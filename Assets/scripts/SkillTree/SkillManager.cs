@@ -17,7 +17,7 @@ public class SkillManager : MonoBehaviour
         switch (skillName)
         {
             case "MaxHealthBoot":
-                StatsManager.Instance.UpdateMaxHealth(1);
+                StatsManager.Instance.AddMaxHealth(1);
                 break;
             case "Sword Slash":
                 combat.enabled = true;

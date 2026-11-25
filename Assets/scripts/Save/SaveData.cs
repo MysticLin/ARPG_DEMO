@@ -19,6 +19,12 @@ public class SaveData
     public List<string> spokenActorIds=new();
     public bool hasSlotIndex;
     public List<SceneWorldState> worldStates = new();
+    public bool hasProgression;
+    public int level;
+    public int currentExp;
+    public int expToLevel;
+    public int skillPoints;
+    public List<SkillSaveEntry> skills=new();
 }
 [Serializable]
 public class ItemSaveEntry
@@ -32,4 +38,11 @@ public class QuestSaveEntry
 {
     public string questId;
     public int[] objectiveProgress;
+}
+[Serializable]
+public class SkillSaveEntry
+{
+    public string skillId;
+    public int level;
+    public bool unlocked;
 }

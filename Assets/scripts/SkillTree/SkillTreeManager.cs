@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 public class SkillTreeManager : MonoBehaviour
 {
@@ -54,5 +56,45 @@ public class SkillTreeManager : MonoBehaviour
     {
         availabliePoints += amount;
         pointsText.text = "Points:" + availabliePoints;
+    }
+    public List<SkillSaveEntry> ExportSkills()
+    {
+        List<SkillSaveEntry> result = new();
+        foreach(SKillSlot slot in skillSlots)
+        {
+            if(slot==null||slot.skillSO==null)
+                continue;
+            result.Add(new SkillSaveEntry
+            {
+                skillId = slot.skillSO.Id,
+                level = slot.currentLevel,
+                unlocked = slot.isUnlocked
+            });
+        }
+        return result;
+    }
+    public void RestoreProgression(int savedPoints,List<SkillSaveEntry> savedSkills)
+    {
+        availabliePoints = Mathf.Max(0, savedPoints);
+        if (pointsText != null)
+            pointsText.text = "Points:" + availabliePoints;
+        if (savedSkills == null)
+            return;
+        Dictionary<string, SkillSaveEntry> map = new();
+        foreach(SkillSaveEntry entry in savedSkills)
+        {
+            if(entry==null||string.IsNullOrEmpty(entry.skillId))
+                continue;
+            map[entry.skillId] = entry;
+        }
+        foreach(SKillSlot slot in skillSlots)
+        {
+            if(slot==null||slot.skillSO==null)
+                continue;
+            if(map.TryGetValue(slot.skillSO.Id,out var entry))
+            {
+                slot.RestoreState(entry.level, entry.unlocked);
+            }
+        }
     }
 }

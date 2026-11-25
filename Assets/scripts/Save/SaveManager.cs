@@ -48,6 +48,8 @@ public class SaveManager : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         StatsManager stats = StatsManager.Instance;
         InventoryManager inventory= InventoryManager.Instance;
+        ExpManager exp = FindObjectOfType<ExpManager>(true);
+        SkillTreeManager skillTree=FindObjectOfType<SkillTreeManager>(true);
         if (SceneManager.GetActiveScene().name == "Boot")
             return;
         if (player == null || stats == null || inventory == null)
@@ -88,6 +90,18 @@ public class SaveManager : MonoBehaviour
                 Data.spokenActorIds=GameManager.Instance.DialogueHistoryTracker.ExportSokenActorIds();
             if(GameManager.Instance.LocatioHistroyTracker!=null)
                 Data.visitedLocationIds=GameManager.Instance.LocatioHistroyTracker.ExportVisitedLocationIds();
+        }
+        if (exp != null)
+        {
+            Data.hasProgression=true;
+            Data.level=exp.level;
+            Data.currentExp=exp.currentExp;
+            Data.expToLevel = exp.expToLevel;
+        }
+        if (skillTree != null)
+        {
+            Data.skillPoints=skillTree.availabliePoints;
+            Data.skills=skillTree.ExportSkills();
         }
         Data.worldStates = WorldStateManager.Instance != null
     ? WorldStateManager.Instance.Export()
@@ -134,6 +148,21 @@ public class SaveManager : MonoBehaviour
             player.transform.position = new Vector2(Data.playerX, Data.playerY);
         if (StatsManager.Instance != null)
             StatsManager.Instance.RestoreHealth(Data.currentHealth, Data.maxHealth);
+        if (Data.hasProgression)
+        {
+            ExpManager exp = FindObjectOfType<ExpManager>(true);
+            if(exp != null)
+            {
+                exp.RestoreProgression(Data.level,
+                    Data.currentExp, Data.expToLevel);
+            }
+            SkillTreeManager skillTree = FindObjectOfType<SkillTreeManager>(true);
+            if (skillTree != null)
+            {
+                skillTree.RestoreProgression(Data.skillPoints, Data.skills);
+            }
+        }
+
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ClearInventory();
