@@ -27,6 +27,9 @@ public class Enemy_Health : MonoBehaviour
     {
         health = new Health(StartMaxHealth);
         health.OnDied += HandleDead;
+
+        if (GetComponent<Enemy_StatusEffects>() == null)
+            gameObject.AddComponent<Enemy_StatusEffects>();
     }
     private void Start()
     {

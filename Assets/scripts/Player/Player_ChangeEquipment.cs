@@ -11,8 +11,17 @@ public class Player_ChangeEquipment : MonoBehaviour
         if (StatsManager.Instance == null || StatsManager.Instance.isDead) return;
         if (Input.GetButtonDown("ChangeEquipment"))
         {
-            combat.enabled=!combat.enabled;
-            bow.enabled=!bow.enabled;
+            if(combat==null||bow==null)return;
+            if (combat.enabled)
+            {
+                combat.enabled = false;
+                bow.enabled = true;
+            }
+            else if (bow.enabled && combat.unlocked)
+            {
+                bow.enabled = false;
+                combat.enabled=true;
+            }
         }
     }
 }

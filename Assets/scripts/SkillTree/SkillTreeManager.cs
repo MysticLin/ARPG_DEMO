@@ -78,23 +78,27 @@ public class SkillTreeManager : MonoBehaviour
         availabliePoints = Mathf.Max(0, savedPoints);
         if (pointsText != null)
             pointsText.text = "Points:" + availabliePoints;
-        if (savedSkills == null)
-            return;
-        Dictionary<string, SkillSaveEntry> map = new();
-        foreach(SkillSaveEntry entry in savedSkills)
+        if (savedSkills != null)
         {
-            if(entry==null||string.IsNullOrEmpty(entry.skillId))
-                continue;
-            map[entry.skillId] = entry;
-        }
-        foreach(SKillSlot slot in skillSlots)
-        {
-            if(slot==null||slot.skillSO==null)
-                continue;
-            if(map.TryGetValue(slot.skillSO.Id,out var entry))
+            Dictionary<string, SkillSaveEntry> map = new();
+            foreach(SkillSaveEntry entry in savedSkills)
             {
-                slot.RestoreState(entry.level, entry.unlocked);
+                if(entry==null||string.IsNullOrEmpty(entry.skillId))
+                    continue;
+                map[entry.skillId] = entry;
+            }
+            foreach(SKillSlot slot in skillSlots)
+            {
+                if(slot==null||slot.skillSO==null)
+                    continue;
+                if(map.TryGetValue(slot.skillSO.Id,out var entry))
+                {
+                    slot.RestoreState(entry.level, entry.unlocked);
+                }
             }
         }
+        SkillManager skillManager = FindObjectOfType<SkillManager>(true);
+        if (skillManager != null)
+            skillManager.ApplyRestoredSkills();
     }
 }

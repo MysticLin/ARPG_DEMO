@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Enemy_Move : MonoBehaviour
 {
     [Header("移动")]
     public float speed;
+    private float speedMultiplier = 1f;
     [Header("检测")]
     public float playerDetectRange = 5;
     public Transform detectionPoint;
@@ -173,7 +175,7 @@ public class Enemy_Move : MonoBehaviour
         if (Mathf.Abs(direction.x) > 0.01f)
             SetFacing(direction.x);
         if (rb != null)
-            rb.velocity = direction * speed;
+            rb.velocity = direction * speed * speedMultiplier;
     }
     private void SetFacing(float x)
     {
@@ -195,6 +197,10 @@ public class Enemy_Move : MonoBehaviour
     {
         patrolTarget = homePosition + Random.insideUnitCircle * patrolRadius;
         patrolWaitTimer = 0f;
+    }
+    public void SetSpeedMultiplier(float value)
+    {
+        speedMultiplier = Mathf.Max(0.1f, value);
     }
     private void CheckForPlayer()
     {

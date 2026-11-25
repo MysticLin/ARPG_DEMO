@@ -6,6 +6,7 @@ public class Player_Combat : MonoBehaviour
     public LayerMask enemyLayer;
     public Animator anim;
     public float cooldown = 2;
+    public bool unlocked;
     [SerializeField] private Player_Move playerMove;
     private float attackPointBaseX;
     private float timer;
@@ -13,7 +14,8 @@ public class Player_Combat : MonoBehaviour
     {
         if (playerMove == null)
             playerMove = GetComponent<Player_Move>();
-
+        if(!unlocked)
+            enabled=false;
         if (attackPoint != null)
             attackPointBaseX = Mathf.Abs(attackPoint.localPosition.x);
     }
@@ -55,7 +57,10 @@ public class Player_Combat : MonoBehaviour
         if (enemies[0].TryGetComponent(out Enemy_Knockback enemyKnockback))
         {
             enemies[0].GetComponent<Enemy_Knockback>().Knockback(transform, StatsManager.Instance.knockbackForce, StatsManager.Instance.stunTime, StatsManager.Instance.knockbackTime);
-        }    
+        }
+        Enemy_StatusEffects status = enemies[0].GetComponent<Enemy_StatusEffects>();
+        if (status != null)
+            SkillManager.Instance?.ApplyOnHit(status);
     }
     public void FinishAttacking()
     {

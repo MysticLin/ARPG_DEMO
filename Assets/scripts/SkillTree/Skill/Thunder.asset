@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Thunder
   m_EditorClassIdentifier: 
   skillName: thunder
+  SkillId: thunder
   maxLevel: 1
+  effectType: 3
+  valuePerLevel: 1.0
+  duration: 0.0
   skillIcon: {fileID: 21300000, guid: a334debb7a391c44aa79f0f3b479d9b5, type: 3}

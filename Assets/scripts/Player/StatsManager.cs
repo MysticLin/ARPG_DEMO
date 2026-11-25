@@ -20,6 +20,15 @@ public class StatsManager : MonoBehaviour
 
     [Header("生命属性")]
     public int startHealth = 100;
+    [Header("防御属性")]
+    public int defense;
+    public float damageReduction;
+    public float dodgeChance;
+    private int baseDamage;
+    private float baseSpeed;
+    private int baseDefense;
+    private float baseDamageReduction;
+    private float baseDodgeChance;
     private Health health { get;set; }
     public Health PlayerHealth => health;
     public int CurrentHealth => health != null ? health.CurrentHealth : 0;
@@ -37,6 +46,21 @@ public class StatsManager : MonoBehaviour
         if (startHealth <= 0)
             startHealth = 100;
         health =new Health(startHealth);
+
+        baseDamage = damage;
+        baseSpeed = speed;
+        baseDefense = defense;
+        baseDamageReduction = damageReduction;
+        baseDodgeChance = dodgeChance;
+    }
+
+    public void ResetSkillStats()
+    {
+        damage = baseDamage;
+        speed = baseSpeed;
+        defense = baseDefense;
+        damageReduction = baseDamageReduction;
+        dodgeChance = baseDodgeChance;
     }
     private void OnEnable()
     {
@@ -87,7 +111,7 @@ public class StatsManager : MonoBehaviour
     public void UpdateSpeed(int amount)
     {
         speed += amount;
-        if (statsUI!=null)return;
-        statsUI.UpdateAllStats();
+        if (statsUI != null)
+            statsUI.UpdateAllStats();
     }
 }

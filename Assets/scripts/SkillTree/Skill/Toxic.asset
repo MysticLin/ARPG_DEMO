@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Toxic
   m_EditorClassIdentifier: 
   skillName: Toxic
+  SkillId: Toxic
   maxLevel: 1
+  effectType: 7
+  valuePerLevel: 0.1
+  duration: 0.0
   skillIcon: {fileID: 21300000, guid: b6e103959aeacbf4e8bd8965978e6707, type: 3}

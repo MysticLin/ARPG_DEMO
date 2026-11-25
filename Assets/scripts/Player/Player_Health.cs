@@ -62,8 +62,21 @@ public class Player_Health : MonoBehaviour
         if (amount <= 0 || health == null || StatsManager.Instance == null) return false;
         if (StatsManager.Instance.isDead||Time.time<InvincibleTimeUntil)
             return false;
-        StatsManager.Instance.UpdateHealth(-amount);
-        DamageNumberManager.Spawn(amount, transform.position + Vector3.up * 1f, Color.red);
+        //闪避
+        if (UnityEngine.Random.value < StatsManager.Instance.dodgeChance)
+        {
+            DamageNumberManager.Spawn(0, transform.position + Vector3.up, Color.gray);
+            return false;
+        }
+        //防御
+        int finalDamage = Mathf.Max(1, amount - StatsManager.Instance.defense);
+
+        //免伤
+        float reduction = Mathf.Clamp(StatsManager.Instance.damageReduction, 0f, 0.8f);
+        finalDamage = Mathf.Max(1, Mathf.RoundToInt(finalDamage * (1f - reduction)));
+
+        StatsManager.Instance.UpdateHealth(-finalDamage);
+        DamageNumberManager.Spawn(finalDamage, transform.position + Vector3.up * 1f, Color.red);
         CameraShake.Instance?.Shake(0.3f);
         HitStop.instance?.Play(0.05f);
         if(flashRoutine!=null)
