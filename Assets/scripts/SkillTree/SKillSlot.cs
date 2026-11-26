@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.EventSystems;
 
-public class SKillSlot : MonoBehaviour
+public class SKillSlot : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerMoveHandler
 {
     public List<SKillSlot> prerequisiteSkillSlots;
     public SkillSO skillSO;
@@ -13,7 +14,7 @@ public class SKillSlot : MonoBehaviour
     public Image skillIcon;
     public Button skillButton;
     public TMP_Text skillLevelText;
-
+    public SkillInfo skillInfo;
     public static event Action<SKillSlot> OnAbilityPointSpent;
     public static event Action<SKillSlot> OnSkillMaxed;
 
@@ -75,5 +76,23 @@ public class SKillSlot : MonoBehaviour
         currentLevel = Mathf.Clamp(savedLevel, 0, skillSO.maxLevel);
         isUnlocked=savedUnlocked;
         UpdateUI();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (skillInfo != null)
+            skillInfo.Show(this);
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        if (skillInfo != null)
+            skillInfo.FollowMouse();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+       if(skillInfo!=null)
+            skillInfo.Hide();
     }
 }

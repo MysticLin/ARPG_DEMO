@@ -8,6 +8,7 @@ public class SkillTreeManager : MonoBehaviour
     public SKillSlot[] skillSlots;
     public TMP_Text pointsText;
     public int availabliePoints;
+    public SkillInfo skillInfo;
     private void OnEnable()
     {
         SKillSlot.OnAbilityPointSpent += HandleAbilityPointsSpent;
@@ -19,11 +20,17 @@ public class SkillTreeManager : MonoBehaviour
         SKillSlot.OnAbilityPointSpent -= HandleAbilityPointsSpent;
         SKillSlot.OnSkillMaxed -= HandleSkillMaxed;
         ExpManager.OnLevelUp -= UpdateAbilityPoints;
+        if(skillInfo!=null)
+            skillInfo.Hide();
     }
     private void Start()
     {
+        RefreshSkillInfo();
+       
         foreach(SKillSlot slot in skillSlots)
         {
+            if(slot==null||slot.skillButton==null)continue;
+            slot.skillInfo=skillInfo;
             slot.skillButton.onClick.AddListener(()=>CheckAvailablePoints(slot));
         }
         UpdateAbilityPoints(0);
@@ -55,6 +62,7 @@ public class SkillTreeManager : MonoBehaviour
     public void UpdateAbilityPoints(int amount)
     {
         availabliePoints += amount;
+        if(pointsText!=null)
         pointsText.text = "Points:" + availabliePoints;
     }
     public List<SkillSaveEntry> ExportSkills()
@@ -100,5 +108,17 @@ public class SkillTreeManager : MonoBehaviour
         SkillManager skillManager = FindObjectOfType<SkillManager>(true);
         if (skillManager != null)
             skillManager.ApplyRestoredSkills();
+    }
+    public void RefreshSkillInfo()
+    {
+        if (skillInfo == null)
+            skillInfo = FindObjectOfType<SkillInfo>(true);
+        if (skillSlots == null)
+            return;
+        foreach(SKillSlot slot in skillSlots)
+        {
+            if(slot!=null)
+                slot.skillInfo=skillInfo;
+        }
     }
 }

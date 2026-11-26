@@ -1,10 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
     public Player_Combat combat;
     public static SkillManager Instance;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -18,7 +18,6 @@ public class SkillManager : MonoBehaviour
         if (combat == null)
             combat = FindObjectOfType<Player_Combat>(true);
     }
-
     private void OnDestroy()
     {
         if (Instance == this)
