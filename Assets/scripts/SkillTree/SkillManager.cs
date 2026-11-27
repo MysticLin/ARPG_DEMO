@@ -43,7 +43,7 @@ public class SkillManager : MonoBehaviour
     {
         if (slot == null || slot.skillSO == null) return;
 
-        ApplyEffect(slot, true);
+        ApplyEffect(slot, true,1);
     }
 
     // 读档时调用：只重算技能提供的属性，不重放最大生命
@@ -66,7 +66,7 @@ public class SkillManager : MonoBehaviour
 
             if (slot.skillSO.effectType == SkillEffectType.UnlockMelee)
             {
-                if (slot.skillSO.skillName == "Sword Slash")
+                if (slot.skillSO.skillName == "Sword Slash"&&slot.currentLevel>0)
                     swordUnlocked = true;
                 continue;
             }
@@ -75,7 +75,7 @@ public class SkillManager : MonoBehaviour
             if (slot.skillSO.effectType == SkillEffectType.MaxHealth)
                 continue;
 
-            ApplyEffect(slot, false);
+            ApplyEffect(slot, false,slot.currentLevel);
         }
 
         if (combat != null)
@@ -123,7 +123,7 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    private void ApplyEffect(SKillSlot slot, bool applyMaxHealth)
+    private void ApplyEffect(SKillSlot slot, bool applyMaxHealth,int levelCount)
     {
         if (slot == null || slot.skillSO == null) return;
 
@@ -131,9 +131,9 @@ public class SkillManager : MonoBehaviour
         StatsManager stats = StatsManager.Instance;
 
         if (stats == null) return;
-
-        float value = Mathf.Max(0f, skill.valuePerLevel);
-        int intValue = Mathf.RoundToInt(value);
+        int levels = Mathf.Max(0, levelCount);
+        float totalvalue = Mathf.Max(0f, skill.valuePerLevel)*levels;
+        int totalintValue = Mathf.RoundToInt(totalvalue);
 
         switch (skill.effectType)
         {
@@ -149,32 +149,32 @@ public class SkillManager : MonoBehaviour
                 break;
 
             case SkillEffectType.AttackDamage:
-                stats.damage += intValue;
+                stats.damage += totalintValue;
                 break;
 
             case SkillEffectType.MaxHealth:
                 if (applyMaxHealth)
-                    stats.AddMaxHealth(intValue);
+                    stats.AddMaxHealth(totalintValue);
                 break;
 
             case SkillEffectType.Defense:
-                stats.defense += intValue;
+                stats.defense += totalintValue;
                 break;
 
             case SkillEffectType.DamageReduction:
                 stats.damageReduction = Mathf.Clamp(
-                    stats.damageReduction + value,
+                    stats.damageReduction + totalintValue,
                     0f,
                     0.8f);
                 break;
 
             case SkillEffectType.MoveSpeed:
-                stats.speed += value;
+                stats.speed += totalintValue;
                 break;
 
             case SkillEffectType.Dodge:
                 stats.dodgeChance = Mathf.Clamp(
-                    stats.dodgeChance + value,
+                    stats.dodgeChance + totalintValue,
                     0f,
                     0.75f);
                 break;
