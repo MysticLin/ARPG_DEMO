@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player_Bow : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class Player_Bow : MonoBehaviour
         }
         if (playerMove.state == PlayerState.Shooting) return;
         HandleAiming();
-        if (Input.GetButtonDown("Shoot") && shootTimer <= 0)
+        if (Input.GetMouseButtonDown(0) && shootTimer <= 0)
         {
           shotDirection=aimDirection;
             playerMove.SetFacing(shotDirection.x);
@@ -96,5 +97,9 @@ public class Player_Bow : MonoBehaviour
         CancelInvoke(nameof(EndShooting));
         if (playerMove != null) playerMove.SetShooting(false);
         if (anim != null) anim.SetBool("isShooting", false);
+    }
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player_Move : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class Player_Move : MonoBehaviour
         if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)return;
         if (DialogueManager.IsDialogueActive) return;
         if (state != PlayerState.Normal) return;
-        if (Input.GetButtonDown("Slash")&&player_Combat!=null&&player_Combat.enabled)
+        if (Input.GetMouseButtonDown(0)&&!IsPointerOverUI()&&player_Combat!=null&&player_Combat.enabled)
         {
             player_Combat.Attack();
         }   
@@ -124,6 +125,10 @@ public class Player_Move : MonoBehaviour
             if (sr != null)
                 sr.flipX = dir < 0;
         }
+    }
+    private bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }
 public enum PlayerState

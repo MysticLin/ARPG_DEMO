@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup menuBar;
     private bool isMenuActive;
+    private bool menuPaused;
     [SerializeField] private CanvasGroup statsMenu;
     [SerializeField] private CanvasGroup skillsMenu;
     [SerializeField] private CanvasGroup questsMenu;
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
         SetMenuState(skillsMenu,false);
         SetMenuState(questsMenu, false);
         SetMenuState(target, true);
+        SyncPasueState();
     }
     public void ToggleMainMenu()
     {
@@ -33,12 +35,44 @@ public class UIManager : MonoBehaviour
         SetMenuState(skillsMenu, false);
         SetMenuState(questsMenu, false);
         EventSystem.current.SetSelectedGameObject(null);
+        SyncPasueState();
 
     }
-    public void SetMenuState(CanvasGroup group,bool isActive)
+    public void SetMenuState(CanvasGroup group, bool isActive)
     {
         group.alpha = isActive ? 1 : 0;
         group.interactable = isActive;
         group.blocksRaycasts = isActive;
+    }
+    private bool IsAnyMenuOpen()
+    {
+        return isMenuActive || IsCanvasOpen(statsMenu) || IsCanvasOpen(skillsMenu)
+            || IsCanvasOpen(questsMenu);
+    }
+    private bool IsCanvasOpen(CanvasGroup group)
+    {
+        return group != null && group.alpha > 0 && group.blocksRaycasts;
+    }
+    private void SyncPasueState()
+    {
+        bool shouldPasue=IsAnyMenuOpen();
+        if (shouldPasue&&!menuPaused)
+        {
+            PauseService.Instance?.Push();
+            menuPaused = true;
+        }
+        else if (!shouldPasue && menuPaused)
+        {
+            PauseService.Instance?.Pop();
+            menuPaused = false;
+        }
+    }
+    private void OnDisable()
+    {
+        if (menuPaused)
+        {
+            PauseService.Instance?.Pop();
+            menuPaused = false;
+        }
     }
 }

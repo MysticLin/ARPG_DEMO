@@ -163,18 +163,18 @@ public class SkillManager : MonoBehaviour
 
             case SkillEffectType.DamageReduction:
                 stats.damageReduction = Mathf.Clamp(
-                    stats.damageReduction + totalintValue,
+                    stats.damageReduction + totalvalue,
                     0f,
                     0.8f);
                 break;
 
             case SkillEffectType.MoveSpeed:
-                stats.speed += totalintValue;
+                stats.speed += totalvalue;
                 break;
 
             case SkillEffectType.Dodge:
                 stats.dodgeChance = Mathf.Clamp(
-                    stats.dodgeChance + totalintValue,
+                    stats.dodgeChance + totalvalue,
                     0f,
                     0.75f);
                 break;

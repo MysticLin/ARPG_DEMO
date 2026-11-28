@@ -40,7 +40,7 @@ public class DialogueManager : MonoBehaviour
             if (Input.anyKeyDown) EndDialogue();
             return;
         }
-       if(Input.GetButtonDown("Interact"))
+       if(Input.GetMouseButtonDown(0))
             AdvanceDialogue();
     }
     public bool CanStartDialogue()
