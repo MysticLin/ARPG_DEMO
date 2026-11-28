@@ -19,11 +19,21 @@ public class UIManager : MonoBehaviour
     public void ToggleMenu(CanvasGroup target)
     {
         if (DialogueManager.IsDialogueActive) return;
-        SetMenuState(statsMenu, false);
-        SetMenuState(skillsMenu,false);
-        SetMenuState(questsMenu, false);
-        SetMenuState(target, true);
-        SyncPasueState();
+        if (target == null) return;
+        UIWindow window=target.GetComponent<UIWindow>();
+        if (window == null)
+            window = target.GetComponentInParent<UIWindow>();
+        if (window != null)
+        {
+            UIWindowManager.Instance?.Toggle(window);
+            return;
+        }
+        QuestLogUI questLog = target.GetComponentInParent<QuestLogUI>();
+        if (questLog != null)
+        {
+            questLog.ToggleQuestLog();
+            return;
+        }
     }
     public void ToggleMainMenu()
     {
@@ -31,9 +41,6 @@ public class UIManager : MonoBehaviour
         isMenuActive = !isMenuActive;
         SetMenuState(menuBar, isMenuActive);
         menuToggleImage.sprite =isMenuActive ? closeSprite : openSprite;
-        SetMenuState(statsMenu, false);
-        SetMenuState(skillsMenu, false);
-        SetMenuState(questsMenu, false);
         EventSystem.current.SetSelectedGameObject(null);
         SyncPasueState();
 
@@ -46,9 +53,8 @@ public class UIManager : MonoBehaviour
     }
     private bool IsAnyMenuOpen()
     {
-        return isMenuActive || IsCanvasOpen(statsMenu) || IsCanvasOpen(skillsMenu)
-            || IsCanvasOpen(questsMenu);
-    }
+        return isMenuActive;
+    }     
     private bool IsCanvasOpen(CanvasGroup group)
     {
         return group != null && group.alpha > 0 && group.blocksRaycasts;

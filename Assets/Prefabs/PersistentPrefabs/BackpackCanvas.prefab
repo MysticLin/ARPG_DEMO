@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 809057717691313839}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51,11 +51,11 @@ RectTransform:
   - {fileID: 6531143565657202737}
   - {fileID: 2058981891969653820}
   - {fileID: 3940343697070275378}
-  m_Father: {fileID: 7020256138831082895}
+  m_Father: {fileID: 6534150022606080797}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -38}
+  m_AnchoredPosition: {x: 0, y: -38.00003}
   m_SizeDelta: {x: 1100, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3541533698908667071
@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 757066653083045006}
   - component: {fileID: 7026380821627076337}
   - component: {fileID: 5049682656319982767}
+  - component: {fileID: 4422996956628774163}
   m_Layer: 5
   m_Name: BackpackCanvas
   m_TagString: Untagged
@@ -229,7 +230,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6534150022606080797}
-  - {fileID: 7839674843754141047}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -282,7 +282,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &7026380821627076337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +312,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4422996956628774163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6649056211795583292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486c2231ef6dc694e89f3518f9105fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 5049682656319982767}
+  pausesGame: 1
 --- !u!1 &7660830716892250687
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +337,7 @@ GameObject:
   - component: {fileID: 6534150022606080797}
   - component: {fileID: 1284474850477466989}
   - component: {fileID: 328647204430177867}
+  - component: {fileID: 258001095841640901}
   m_Layer: 5
   m_Name: Pannel
   m_TagString: Untagged
@@ -343,6 +358,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7613344505955185981}
+  - {fileID: 7839674843754141047}
   m_Father: {fileID: 7020256138831082895}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -388,6 +404,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &258001095841640901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660830716892250687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e303fbbc81c67924e9be9b945e42153c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 4422996956628774163}
+  targetPanel: {fileID: 6534150022606080797}
 --- !u!1 &7723742763440143155
 GameObject:
   m_ObjectHideFlags: 0

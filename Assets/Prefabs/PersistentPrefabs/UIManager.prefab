@@ -529,6 +529,7 @@ GameObject:
   - component: {fileID: 9121370653718693665}
   - component: {fileID: 3992356667899636680}
   - component: {fileID: 8963367793472548198}
+  - component: {fileID: 6422068006956613832}
   m_Layer: 5
   m_Name: QuestCanvas
   m_TagString: Untagged
@@ -548,9 +549,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6685323850554797308}
   - {fileID: 776169488851207213}
-  - {fileID: 5350214114912196055}
   m_Father: {fileID: 1570690351658011642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -645,6 +644,20 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &6422068006956613832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677103586215571027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486c2231ef6dc694e89f3518f9105fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 8963367793472548198}
+  pausesGame: 1
 --- !u!1 &678851106248494463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,17 +1168,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1996631480045824452}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8035527835609606458}
-  m_Father: {fileID: 8966555537317271536}
+  m_Father: {fileID: 776169488851207213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -687, y: 433}
+  m_AnchoredPosition: {x: -294.50006, y: 433}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4554329521638364410
@@ -1559,6 +1572,7 @@ GameObject:
   - component: {fileID: 2261367781153518121}
   - component: {fileID: 4384312052573508328}
   - component: {fileID: 4511156507999412081}
+  - component: {fileID: 4742990005301066784}
   m_Layer: 5
   m_Name: StatsPanel
   m_TagString: Untagged
@@ -1648,7 +1662,21 @@ MonoBehaviour:
   - {fileID: 4903825791694427135}
   - {fileID: 1336181850797943617}
   - {fileID: 263011949106906170}
-  statsCanvas: {fileID: 924477357111580910}
+  window: {fileID: 0}
+--- !u!114 &4742990005301066784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2216806784854750301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e303fbbc81c67924e9be9b945e42153c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 746421436009439695}
+  targetPanel: {fileID: 4445333440091508742}
 --- !u!1 &2249951501754610806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,12 +2265,12 @@ RectTransform:
   - {fileID: 552569072431319417}
   - {fileID: 6276543140585704372}
   - {fileID: 7586082112560122053}
-  m_Father: {fileID: 8966555537317271536}
+  m_Father: {fileID: 776169488851207213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 450, y: -127.5}
-  m_SizeDelta: {x: -900, y: -255}
+  m_AnchoredPosition: {x: 842.5, y: -127.5}
+  m_SizeDelta: {x: -85, y: -395}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &8313199109422782929
 CanvasGroup:
@@ -2938,6 +2966,7 @@ GameObject:
   - component: {fileID: 4271220270764882244}
   - component: {fileID: 4893481362977878123}
   - component: {fileID: 8927706738187270811}
+  - component: {fileID: 6178233751452359173}
   m_Layer: 0
   m_Name: SkillPanel
   m_TagString: Untagged
@@ -3006,6 +3035,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.35
+--- !u!114 &6178233751452359173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3168156212626968593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e303fbbc81c67924e9be9b945e42153c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 4885344657768715559}
+  targetPanel: {fileID: 4271220270764882244}
 --- !u!1 &3204179013761498627
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,6 +4771,7 @@ GameObject:
   - component: {fileID: 1401329968448882660}
   - component: {fileID: 924477357111580910}
   - component: {fileID: 4186569461195497319}
+  - component: {fileID: 746421436009439695}
   m_Layer: 5
   m_Name: StatsCanvas
   m_TagString: Untagged
@@ -4853,6 +4897,20 @@ MonoBehaviour:
   defense: 0
   damageReduction: 0
   dodgeChance: 0
+--- !u!114 &746421436009439695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488029239398604068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486c2231ef6dc694e89f3518f9105fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 924477357111580910}
+  pausesGame: 1
 --- !u!1 &6732390670541911760
 GameObject:
   m_ObjectHideFlags: 0
@@ -5450,6 +5508,7 @@ GameObject:
   - component: {fileID: 9033025527025756977}
   - component: {fileID: 7372411088358783833}
   - component: {fileID: 6393108033947346855}
+  - component: {fileID: 2298635830565874916}
   m_Layer: 5
   m_Name: QuestLog
   m_TagString: Untagged
@@ -5471,6 +5530,8 @@ RectTransform:
   m_Children:
   - {fileID: 5326296913653028311}
   - {fileID: 1845870399180741662}
+  - {fileID: 6685323850554797308}
+  - {fileID: 5350214114912196055}
   m_Father: {fileID: 8966555537317271536}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5554,6 +5615,8 @@ MonoBehaviour:
   - {fileID: 5946820958236171807}
   - {fileID: 1034694493566069484}
   - {fileID: 6419026100807436669}
+  questCanvas: {fileID: 8963367793472548198}
+  questWindow: {fileID: 0}
   noAvailableQuestSO: {fileID: 11400000, guid: 34cc2c261f4b1b44bad2bd5c53945494, type: 2}
   questSlots:
   - {fileID: 3342615021756182589}
@@ -5563,10 +5626,23 @@ MonoBehaviour:
   - {fileID: 4682470512213635135}
   - {fileID: 7427430690040863417}
   - {fileID: 6086972225198977763}
-  questCanvas: {fileID: 8963367793472548198}
   acceptCanvasGroup: {fileID: 8858007874684623768}
   declineCanvasGroup: {fileID: 5374589115531376810}
   completeCanvasGroup: {fileID: 2557720240081888629}
+--- !u!114 &2298635830565874916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7929834521822118386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e303fbbc81c67924e9be9b945e42153c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window: {fileID: 6422068006956613832}
+  targetPanel: {fileID: 776169488851207213}
 --- !u!1 &7952934533688741406
 GameObject:
   m_ObjectHideFlags: 0
@@ -6118,6 +6194,7 @@ GameObject:
   - component: {fileID: 5318304989241033692}
   - component: {fileID: 3032344247478897036}
   - component: {fileID: 5839067610796836944}
+  - component: {fileID: 4885344657768715559}
   m_Layer: 0
   m_Name: SkillsCanvas
   m_TagString: Untagged
@@ -6274,7 +6351,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combat: {fileID: 275775630849408242, guid: 0caf293837bfa884ab4e2980c1a1ebb1, type: 3}
-  skillInfo: {fileID: 3354016588139441076}
 --- !u!114 &5839067610796836944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6287,7 +6363,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdced2b7f8cdfef49bfc4db99c9e6e9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statsCanvas: {fileID: 5383302122072324208}
+  window: {fileID: 0}
+--- !u!114 &4885344657768715559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8888132132693793294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 486c2231ef6dc694e89f3518f9105fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 5383302122072324208}
+  pausesGame: 1
 --- !u!1 &8986791905926040382
 GameObject:
   m_ObjectHideFlags: 0

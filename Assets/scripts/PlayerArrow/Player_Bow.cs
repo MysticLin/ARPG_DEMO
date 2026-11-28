@@ -27,7 +27,7 @@ public class Player_Bow : MonoBehaviour
         }
         if (playerMove.state == PlayerState.Shooting) return;
         HandleAiming();
-        if (Input.GetMouseButtonDown(0) && shootTimer <= 0)
+        if (Input.GetMouseButtonDown(0)&&!IsPointerOverUI()&& shootTimer <= 0)
         {
           shotDirection=aimDirection;
             playerMove.SetFacing(shotDirection.x);

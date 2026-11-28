@@ -38,6 +38,11 @@ public class SKillSlot : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,
             UpdateUI();
         }
     }
+    public void RefreshUI()
+    {
+        if (skillSO == null) return;
+        UpdateUI();
+    }
     public bool CanUnlockSkill()
     {
         foreach(SKillSlot slot in prerequisiteSkillSlots)

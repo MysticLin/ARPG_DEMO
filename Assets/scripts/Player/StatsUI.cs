@@ -4,40 +4,33 @@ using UnityEngine;
 public class StatsUI : MonoBehaviour
 {
     public GameObject[] statsSlots;
-    public CanvasGroup statsCanvas;
-
+    public UIWindow window;
     // 0 Damage / 1 Speed / 2 MaxHealth / 3 Defense / 4 DamageReduction / 5 Dodge
     private const int VisibleSlotCount = 6;
-
-    private bool statsOpen = false;
-
+    private void Awake()
+    {
+        if(window==null)
+            window = GetComponentInParent<UIWindow>();
+        if (window != null)
+            window.OnShown += UpdateAllStats;
+    }
     private void Start()
     {
         UpdateAllStats();
     }
-
+    private void OnDestroy()
+    {
+        if(window!=null)
+            window.OnShown -= UpdateAllStats;
+    }
     private void Update()
     {
         if (DialogueManager.IsDialogueActive) return;
 
         if (Input.GetButtonDown("ToggleStats"))
         {
-            if (statsOpen)
-            {
-                PauseService.Instance?.Pop();
-                UpdateAllStats();
-                statsCanvas.alpha = 0;
-                statsCanvas.blocksRaycasts = false;
-                statsOpen = false;
-            }
-            else
-            {
-                PauseService.Instance?.Push();
-                UpdateAllStats();
-                statsCanvas.alpha = 1;
-                statsCanvas.blocksRaycasts = true;
-                statsOpen = true;
-            }
+            if (window != null)
+                UIWindowManager.Instance?.Toggle(window);
         }
     }
 
@@ -113,20 +106,5 @@ public class StatsUI : MonoBehaviour
         TMP_Text text = statsSlots[index].GetComponentInChildren<TMP_Text>(true);
         if (text != null)
             text.text = value;
-    }
-
-    private void OnDisable()
-    {
-        if (statsOpen)
-        {
-            statsOpen = false;
-            PauseService.Instance?.Pop();
-
-            if (statsCanvas != null)
-            {
-                statsCanvas.alpha = 0;
-                statsCanvas.blocksRaycasts = false;
-            }
-        }
     }
 }

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Threading;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Timeline;
 
 public class QuestLogUI : MonoBehaviour
 {
@@ -11,16 +9,32 @@ public class QuestLogUI : MonoBehaviour
     [SerializeField] private TMP_Text questDescriptionText;
     [SerializeField] private QuestObjectiveSlot[] objectiveSlots;
     [SerializeField] private QuestRewardSlot[] rewardsSlots;
+    [Header("窗口")]
+    [SerializeField] private CanvasGroup questCanvas;
+    [SerializeField] private UIWindow questWindow;
 
-    private QuestSO questSO;
-    public static bool IsOpen {  get; private set; }
-    private bool pausedForQuestUI;
     [SerializeField] private QuestSO noAvailableQuestSO;
     [SerializeField] private QuestLogSlot[] questSlots;
-    [SerializeField] private CanvasGroup questCanvas;
+
     [SerializeField] private CanvasGroup acceptCanvasGroup;
     [SerializeField] private CanvasGroup declineCanvasGroup;
     [SerializeField] private CanvasGroup completeCanvasGroup;
+    private QuestSO questSO;
+    public static bool IsOpen { get; private set; }
+    private void Awake()
+    {
+        if (questWindow == null && questCanvas != null)
+        {
+            questWindow = questCanvas.GetComponent<UIWindow>();
+            if(questWindow==null)
+                questWindow= gameObject.gameObject.AddComponent<UIWindow>();
+        }
+        if (questWindow != null)
+        {
+            questWindow.OnShown += HandleWindowShown;
+            questWindow.OnHidden += HandleWindowHidden;
+        }
+    }
     private void OnEnable()
     {
         QuestEvents.OnQuestOfferRequested += ShowQuestOffer;
@@ -31,15 +45,28 @@ public class QuestLogUI : MonoBehaviour
         IsOpen = false;
         QuestEvents.OnQuestOfferRequested -= ShowQuestOffer;
         QuestEvents.OnQuestTurnInRequested -= ShowQuestTurnIn;
-        if (pausedForQuestUI)
+        if (questWindow != null)
         {
-            PauseService.Instance?.Pop();
-            pausedForQuestUI = false;
+            questWindow.OnShown -= HandleWindowShown;
+            questWindow.OnHidden -= HandleWindowHidden;
+            if (questWindow.IsOpen)
+                UIWindowManager.Instance?.Close(questWindow);
         }
     }
-    #region 展示任务的方法
+    private void HandleWindowShown()
+    {
+        IsOpen = true;
+        if(questManager!=null)
+            RefreshQuestList();
+    }
+    private void HandleWindowHidden()
+    {
+        IsOpen=false;
+    }
+    #region 展示任务
     public void ShowQuestOffer(QuestSO incomingQuestSO)
     {
+        if (questManager == null || incomingQuestSO == null) return;
         if (questManager.IsQuestAccepted(incomingQuestSO)||questManager.GetCompleteQuest(incomingQuestSO))
         {
             questSO = noAvailableQuestSO;
@@ -55,17 +82,18 @@ public class QuestLogUI : MonoBehaviour
             SetCanvasState(completeCanvasGroup, false);
         }
         HandleQuestClicked(questSO);
-        SetCanvasState(questCanvas, true);
+        OpenQuestLog();
     }
 
     public void ShowQuestTurnIn(QuestSO incomingQuestSO)
     {
+        if (questManager == null || incomingQuestSO == null) return;
         questSO=incomingQuestSO;
         HandleQuestClicked(questSO);
         SetCanvasState(completeCanvasGroup,true);
         SetCanvasState(acceptCanvasGroup,false);
         SetCanvasState (declineCanvasGroup,false);
-        SetCanvasState(questCanvas,true);
+        OpenQuestLog();
     }
     #endregion
     #region 存放按钮点击的方法
@@ -79,7 +107,7 @@ public class QuestLogUI : MonoBehaviour
     }
     public void OnDeclineQuestClicked()
     {
-        SetCanvasState (questCanvas, false);
+       CloseQuestLog();
     }
     public void OnCompleteQuestClicked()
     {
@@ -95,34 +123,17 @@ public class QuestLogUI : MonoBehaviour
         group.alpha = activate ? 1 : 0;
         group.blocksRaycasts = activate;
         group.interactable = activate;
-        if (group == questCanvas)
-        {
-            if (activate && !IsOpen)
-            {
-                PauseService.Instance?.Push();
-                pausedForQuestUI = true;
-            }
-            else if (!activate && IsOpen)
-            {
-                PauseService.Instance?.Pop();
-                pausedForQuestUI = false;
-            }
-            IsOpen = activate;
-        }
     }
     public void RefreshQuestList()
     {
+        if (questManager == null || questSlots == null) return;
         List<QuestSO> activeQuests = questManager.GetActiveQuests();
         for (int i = 0; i < questSlots.Length; i++)
         {
             if (i < activeQuests.Count)
-            {
                 questSlots[i].SetQuest(activeQuests[i]);
-            }
             else
-            {
                 questSlots[i].ClearSlot();
-            }
         }
     }
    public void HandleQuestClicked(QuestSO questSO)
@@ -149,6 +160,7 @@ public class QuestLogUI : MonoBehaviour
 
     private void DisplayObjective()
     {
+        if (questSO == null || objectiveSlots == null) return;
         for(int i = 0; i < objectiveSlots.Length; i++)
         {
             if (i < questSO.objectives.Count)
@@ -169,6 +181,7 @@ public class QuestLogUI : MonoBehaviour
     }
     private void DisplayRewards()
     {
+        if (questSO == null || rewardsSlots == null) return;
         for(int i = 0; i < rewardsSlots.Length; i++)
         {
             if (i < questSO.rewards.Count)
@@ -184,5 +197,19 @@ public class QuestLogUI : MonoBehaviour
             }
         }
     }
-
+    public void ToggleQuestLog()
+    {
+        if (questWindow == null) return;
+        UIWindowManager.Instance?.Toggle(questWindow);
+    }
+    public void OpenQuestLog()
+    {
+        if (questWindow == null) return;
+        UIWindowManager.Instance?.Open(questWindow);
+    }
+    public void CloseQuestLog()
+    {
+        if (questWindow == null) return;
+        UIWindowManager.Instance?.Close(questWindow);
+    }
 }

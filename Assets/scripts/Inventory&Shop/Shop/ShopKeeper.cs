@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class ShopKeeper : MonoBehaviour
 {
     public static ShopKeeper currentShopkeeper;
     public Animator anim;
+    public UIWindow shopWindow;
     public CanvasGroup ShopCanvasGroup;
     public ShopManager shopManager;
     public static event Action<ShopManager, bool> OnShopStateChanged;
@@ -32,49 +32,70 @@ public class ShopKeeper : MonoBehaviour
         }
         if (shopkeeperCam == null)
             shopkeeperCam = shopManager.GetComponentInChildren<Camera>(true);
+        if (shopWindow == null && ShopCanvasGroup != null)
+        {
+            shopWindow = ShopCanvasGroup.GetComponent<UIWindow>();
+            if (shopWindow == null)
+                shopWindow = ShopCanvasGroup.GetComponentInParent<UIWindow>();
+        }
+        if (shopWindow != null)
+            shopWindow.OnHidden += HandleShopWindowHidden;
+    }
+    private void OnDisable()
+    {
+        if (shopWindow != null)
+            shopWindow.OnHidden -= HandleShopWindowHidden;
+        if (isShopOpen)
+        {
+            if (UIWindowManager.Instance != null)
+                UIWindowManager.Instance.Close(shopWindow);
+            else
+                HandleShopWindowHidden();
+        }
     }
 
     void Update()
     {
         if (QuestLogUI.IsOpen) return;
-        if (!isShopOpen && PauseService.Instance != null && PauseService.Instance.IsPaused) return;
         if (DialogueManager.IsDialogueActive) return;
         if (shopManager == null || ShopCanvasGroup == null) return;
-        if (playerInRange)
+        if (shopWindow == null) return;
+        if (!playerInRange) return;
+        if (!Input.GetButtonDown("Interact")) return;
+        if (isShopOpen)
         {
-            if (Input.GetButtonDown("Interact"))
-            {
-                if (!isShopOpen)
-                {
-                    PauseService.Instance?.Push();
-                    currentShopkeeper = this;
-                    isShopOpen = true;
-                    ShopCanvasGroup.alpha = 1;
-                    OnShopStateChanged?.Invoke(shopManager, true);
-                    ShopCanvasGroup.blocksRaycasts = true;
-                    ShopCanvasGroup.interactable = true;
-                    if (shopkeeperCam != null)
-                    {
-                        shopkeeperCam.transform.position = transform.position + cameraOffset;
-                        shopkeeperCam.gameObject.SetActive(true);
-                    }
-                    OpenItemShop();
-                }
-                else
-                {
-                    PauseService.Instance?.Pop();
-                    isShopOpen = false;
-                    currentShopkeeper = null;
-                    ShopCanvasGroup.alpha = 0;
-                    OnShopStateChanged?.Invoke(shopManager,false);
-                    ShopCanvasGroup.blocksRaycasts = false;
-                    if(shopkeeperCam!=null)
-                    shopkeeperCam.gameObject.SetActive(false);
-                    ShopCanvasGroup.interactable = false;
-                }
-               
-            }
+            UIWindowManager.Instance?.Toggle(shopWindow);
+            return;
         }
+        OpenShop();
+    }
+    private void OpenShop()
+    {
+        if (shopWindow == null) return;
+        if (isShopOpen) return;
+        isShopOpen = true;
+        currentShopkeeper = this;
+        UIWindowManager.Instance?.Open(shopWindow);
+        OnShopStateChanged?.Invoke(shopManager, true);
+        if (shopkeeperCam != null)
+        {
+            shopkeeperCam.transform.position = transform.position + cameraOffset;
+            shopkeeperCam.gameObject.SetActive(true);
+        }
+        OpenItemShop();
+    }
+    private void CloseShop()
+    {
+        if (!isShopOpen) return;
+        UIWindowManager.Instance?.Close(shopWindow);
+    }
+    private void HandleShopWindowHidden()
+    {
+        isShopOpen=false;
+        currentShopkeeper=null;
+        OnShopStateChanged?.Invoke(shopManager, false);
+        if (shopkeeperCam != null)
+            shopkeeperCam.gameObject.SetActive(false);
     }
     public void OpenItemShop()
     {
@@ -102,14 +123,6 @@ public class ShopKeeper : MonoBehaviour
         {
             anim.SetBool("playerInRange", false);
             playerInRange = false;
-        }
-    }
-    private void OnDisable()
-    {
-        if (isShopOpen)
-        {
-            isShopOpen = false;
-            PauseService.Instance?.Pop();
         }
     }
 }

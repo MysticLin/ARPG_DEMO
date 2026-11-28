@@ -121,4 +121,13 @@ public class SkillTreeManager : MonoBehaviour
                 slot.skillInfo=skillInfo;
         }
     }
+    public void RefreshSkillUI()
+    {
+        if (skillSlots == null) return;
+        foreach(SKillSlot slot in skillSlots)
+        {
+            if(slot!=null)
+                slot.RefreshUI();
+        }
+    }
 }

@@ -1,7 +1,5 @@
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +10,7 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] itemSlots;
     [Header("背包")]
     public InventorySlot[] backpackSlots;
+    public UIWindow backpackWindow;
     [Header("其他")]
     public CanvasGroup backpackCanvas;
     private bool backpackOpen;
@@ -42,6 +41,14 @@ public class InventoryManager : MonoBehaviour
         inventory.Changed += RefreshSlots;
         BindSlots(itemSlots, 0);
         BindSlots(backpackSlots, quickbarCount);
+        if (backpackWindow == null && backpackCanvas != null)
+        {
+            backpackWindow = backpackCanvas.GetComponent<UIWindow>();
+            if (backpackWindow == null)
+                backpackWindow = backpackCanvas.GetComponentInParent<UIWindow>();
+        }
+        if (backpackWindow != null)
+            backpackWindow.OnHidden += HandleBackpackHidden;
         HideBackpackImmediate();
     }
     private void Start()
@@ -53,9 +60,10 @@ public class InventoryManager : MonoBehaviour
     {
         if (!Input.GetKeyDown(KeyCode.B))
             return;
+        if (backpackWindow == null) return;
         if (backpackOpen)
         {
-            CloseBackpack();
+            UIWindowManager.Instance?.Toggle(backpackWindow);
             return;
         }
         if (!CanOpenBackpack())
@@ -64,7 +72,9 @@ public class InventoryManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if(inventory!=null)
+       if(backpackWindow!=null)
+            backpackWindow.OnHidden -= HandleBackpackHidden;
+        if (inventory!=null)
             inventory.Changed -= RefreshSlots;
         if(Instance==this)
             Instance = null;
@@ -86,54 +96,47 @@ public class InventoryManager : MonoBehaviour
             return false;
        if(QuestLogUI.IsOpen)
             return false;
-       if(ShopKeeper.currentShopkeeper!=null)
-            return false;
-       if(PauseService.Instance!=null&&PauseService.Instance.IsPaused)
-            return false;
        return true;
     }
     public void OpenBackpack()
     {
-        if(backpackCanvas==null||backpackOpen)return;
-
-        EnsureBackpackSorting();
-
+        if(backpackWindow==null||backpackOpen)return;
         backpackOpen = true;
-        backpackCanvas.alpha = 1.0f;
-        backpackCanvas.blocksRaycasts = true;
-        backpackCanvas.interactable = true;
-        PauseService.Instance?.Push();
+        EnsureBackpackSorting();
+        UIWindowManager.Instance?.Open(backpackWindow);
     }
 
     private void EnsureBackpackSorting()
     {
+        if (backpackCanvas == null) return;
         Canvas canvas = backpackCanvas.GetComponent<Canvas>();
         if (canvas == null)
             canvas = backpackCanvas.gameObject.AddComponent<Canvas>();
-
-        canvas.overrideSorting = true;
-        canvas.sortingOrder = 1000;
-
         if (backpackCanvas.GetComponent<GraphicRaycaster>() == null)
             backpackCanvas.gameObject.AddComponent<GraphicRaycaster>();
-
         backpackCanvas.transform.SetAsLastSibling();
     }
     public void CloseBackpack()
     {
-        if (backpackCanvas == null || !backpackOpen) return;
-        backpackOpen= false;
-        backpackCanvas.alpha = 0f;
-        backpackCanvas.blocksRaycasts = false;
-        backpackCanvas.interactable = false;
-        PauseService.Instance?.Pop();
+        if (!backpackOpen || backpackWindow == null) return;
+        UIWindowManager.Instance?.Close(backpackWindow);
+    }
+    private void HandleBackpackHidden()
+    {
+        backpackOpen = false;
     }
     private void HideBackpackImmediate()
     {
+        backpackOpen = false;
+        if (backpackWindow != null)
+        {
+            backpackWindow.Hide();
+            return;
+        }
         if (backpackCanvas == null) return;
-        backpackCanvas.alpha = 0f;
-        backpackCanvas.blocksRaycasts= false;
-        backpackCanvas.interactable = false;
+        backpackCanvas.alpha=0f;
+        backpackCanvas.blocksRaycasts = false;
+        backpackCanvas.interactable=false;
     }
     public InventorySlotView GetSlot(int index)
     {
