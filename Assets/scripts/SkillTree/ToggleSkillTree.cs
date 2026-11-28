@@ -26,7 +26,6 @@ public class ToggleSkillTree : MonoBehaviour
     }
     private void RefreshSkills()
     {
-        SkillManager.Instance?.ApplyRestoredSkills();
         SkillTreeManager skillTree = FindObjectOfType<SkillTreeManager>(true);
         if (skillTree != null)
             skillTree.RefreshSkillUI();

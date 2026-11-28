@@ -44,6 +44,13 @@ public class SkillManager : MonoBehaviour
         if (slot == null || slot.skillSO == null) return;
 
         ApplyEffect(slot, true,1);
+        RefreshStatsUI();
+    }
+    private void RefreshStatsUI()
+    {
+        StatsUI statsUI = FindObjectOfType<StatsUI>(true);
+        if(statsUI!=null)
+            statsUI.UpdateAllStats();
     }
 
     // 读档时调用：只重算技能提供的属性，不重放最大生命

@@ -209,7 +209,6 @@ GameObject:
   - component: {fileID: 757066653083045006}
   - component: {fileID: 7026380821627076337}
   - component: {fileID: 5049682656319982767}
-  - component: {fileID: 4422996956628774163}
   m_Layer: 5
   m_Name: BackpackCanvas
   m_TagString: Untagged
@@ -312,20 +311,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &4422996956628774163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6649056211795583292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 486c2231ef6dc694e89f3518f9105fcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 5049682656319982767}
-  pausesGame: 1
 --- !u!1 &7660830716892250687
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e303fbbc81c67924e9be9b945e42153c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  window: {fileID: 4422996956628774163}
+  window: {fileID: 0}
   targetPanel: {fileID: 6534150022606080797}
 --- !u!1 &7723742763440143155
 GameObject:
